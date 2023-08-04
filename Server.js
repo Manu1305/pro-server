@@ -1,8 +1,6 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const mongoURL = "mongodb://127.0.0.1:27017";
 const dotenv = require("dotenv");
-const dbName = "storing";
+const cors = require("cors");
 const userRouter = require("./src/routes/userRoute");
 const productRouter = require("./src/routes/productRoutes");
 const orderRoute = require("./src/routes/orderRoute");
@@ -19,14 +17,14 @@ const updateWishlistRouter = require('./src/routes/wishRoutes')
 const sellerRouter = require("./src/routes/sellerRouter");
 const subsRouter = require("./src/routes/subRoute")
 const notifRouter = require("./src/routes/notiRoute")
+const connectDB = require("./src/config/db");
+
 dotenv.config({ path: './src/config/.env' });
 
-
-console.log("helo")
-console.log(process.env.JWT_SECRETE)
+const PORT = process.env.PORT;
 
 const app = express();
-const cors = require("cors");
+
 
 // setting limit
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -46,18 +44,7 @@ app.use(
   })
 );
 
-const db = mongoose.connection;
-
-mongoose.connect(`${mongoURL}/${dbName}`);
-
-db.on("error", (error) => {
-  console.log("db not connected", error);
-});
-
-db.once("open", () => {
-  console.log("Database connected successfully");
-});
-
+// routes
 app.use("/user", userRouter);
 app.use("/product", productRouter);
 app.use("/orders", orderRoute);
@@ -74,9 +61,16 @@ app.use("/seller", sellerRouter);
 app.use("/subscription", subsRouter);
 app.use("/noti", notifRouter);
 
-const PORT = process.env.PORT;
+
+const server = app.listen(PORT, () => {
+  // db connection
+  connectDB()
+  console.log(`server is running At port ${PORT}`);
+});
 
 
-app.listen(PORT, () => {
-  console.log(`app is running At port ${PORT}`);
+//if error occured
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Logged Error: ${err}`);
+  server.close(() => process.exit(1))
 });
