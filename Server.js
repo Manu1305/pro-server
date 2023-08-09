@@ -39,6 +39,7 @@ app.use(
     permissionsPolicy: {
       features: {
         chUaFormFactor: false,
+        
       },
     },
   })
