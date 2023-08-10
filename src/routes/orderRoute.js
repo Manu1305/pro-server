@@ -16,7 +16,7 @@ router.post("/placeOrder", authMiddleware, createOrder);
 router.put("/update-order", authMiddleware, updateOrder);
 
 // get orders by type
-router.get("/get-all-orders/",authMiddleware,allOrders);
+router.get("/get-all-orders",authMiddleware,allOrders);
 
 // get only admin orders
 // router.get('/admin-orders',authMiddleware,getAdminOrders)

@@ -89,8 +89,11 @@ const paymentVerification = async (req, res, next) => {
       });
 
       await payments.save();
+      const protocol = req.protocol;
+      const host = req.host;
+      const PORT = process.env.PORT
       return res.redirect(
-        `https://hitechmart.onrender.com/payment_succesfull?reference=${razorpay_payment_id}`
+        `https://main.d1de0rwlo5rrpr.amplifyapp.com/payment_succesfull?reference=${razorpay_payment_id}`
       );
     } else {
       console.log("Please trya agin");
