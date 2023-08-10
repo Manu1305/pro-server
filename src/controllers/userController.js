@@ -202,7 +202,7 @@ const forgetpassword = async (req, res) => {
 
     // creating token with expiration
     const token = jwt.sign(payload, process.env.JWT_SECRETE, { expiresIn: "15m" });
-    const link = `https://hitechmart.onrender.com/forgotpassword/${existingUser.id}/${token}`;
+    const link = `https://main.d1de0rwlo5rrpr.amplifyapp.com/forgotpassword/${existingUser.id}/${token}`;
     console.log(link);
 
     // send mail using optional parameters
