@@ -136,7 +136,7 @@ const subVerification = async (req, res, next) => {
 
       await createSubs.save();
       await payments.save();
-      return res.redirect(`https://main.d1de0rwlo5rrpr.amplifyapp.com/login`);
+      return res.redirect(`https://hitecmart.in/login`);
     } else {
       return next(new ErrorResponse("Signature dosen't match", 401));
     }
