@@ -94,7 +94,7 @@ const getUserCart = async (req, res) => {
   try {
     const carts = await Cart.findOne({ userId });
     if (!carts) {
-      return res.status(401).json({ Message: "Your cart is empty...!" });
+      return res.status(200).json({ Message: "Your cart is empty...!" });
     }
     // console.log("carts", carts);
     res.status(200).json(carts);
