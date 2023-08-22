@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./.env" });
 
 const connectDB = () => {
-    console.log("wait");
   try {
     mongoose.set("strictQuery", false);
 

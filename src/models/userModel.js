@@ -84,26 +84,28 @@ const UserSchema = new mongoose.Schema(
 );
 
 // befor updating user collection
-UserSchema.pre("save", async function (next) {
+// UserSchema.pre("save", async function (next) {
+//     console.log("HI MAnu")
+//     console.log(this.password)
 
-  //updated here working porperly
-  console.log("bcrpyted", this.password);
+//   if (!this.isModified("password")) {
+//     const salt = await bcrypt.genSaltSync(10);
+//     this.password = bcrypt.hashSync(this.password, salt);
+//   } 
+//   else if (this.isModified("password")) {
+//     const salt = await bcrypt.genSaltSync(10);
+//     this.password = bcrypt.hashSync(this.password, salt);
+//   } 
+//   else {
 
-  console.log(this.isModified("password"))
-  if (this.isModified("password")) {
+//     next()
+//   }
 
-    console.log("updating this.password")
-    const salt = await bcrypt.genSaltSync(10);
-    this.password = bcrypt.hashSync(this.password, salt);
-  }
-  console.log("creating new user")
-  next()
-  console.log("Increpted", this.password);
-});
+// });
 
 // login match password
 UserSchema.methods.matchPasswords = async function (password) {
-  console.log(password)
+  console.log(this.password)
   return await bcrypt.compare(password, this.password);
 };
 

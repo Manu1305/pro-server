@@ -1,3 +1,4 @@
+
 const Subscription = require("../models/Subscription");
 const Users = require("../models/userModel");
 const nodemailer = require('nodemailer')
@@ -47,6 +48,7 @@ const loginApi = async (req, res) => {
       return res.status(404).json({ message: "User not exist" });
     }
     const isMatch = await user.matchPasswords(password);
+
     if (!isMatch) {
       return res.status(401).json({ message: "incorrect" });
     }
@@ -67,11 +69,9 @@ const signUpApi = async (req, res) => {
 
   if (user) {
     return res.send({ message: "emailexist" });
-    console.log(res.status(404).json({ message: "emailexist" }))
   }
   else if (phone) {
     return res.send({ message: "Phonexist" });
-    console.log(res.status(404).json({ message: "emailexist" }))
   }
 
   try {
@@ -85,6 +85,8 @@ const signUpApi = async (req, res) => {
 
       const { name, email, phone, password, gst, urType, address, shopName } =
         userData;
+        const salt = await bcrypt.genSaltSync(10);
+    const hashedpassword = bcrypt.hashSync(password, salt);
 
       // register user
       const user = new Users({
@@ -92,7 +94,7 @@ const signUpApi = async (req, res) => {
         name,
         email,
         phone,
-        password,
+        password:hashedpassword,
         urType,
         subsPlan: "Noraml",
         shopName,
@@ -117,12 +119,14 @@ const signUpApi = async (req, res) => {
     } else {
       // if buyer
       const { name, email, phone, password, gst, urType } = userData;
+      const salt = await bcrypt.genSaltSync(10);
+    const hashedpassword = bcrypt.hashSync(password, salt);
       const user = new Users({
         profilePicture: "bsdmbn",
         name,
         email,
         phone,
-        password,
+        password:hashedpassword,
         urType,
         gst,
         subsPlan: "Not Applicable",
@@ -233,7 +237,7 @@ const updatePassword = async (req, res) => {
 
   try {
     // Update password without saving
-    const updatedUser = await Users.find({_id: id} );
+    const updatedUser = await Users.findOne({ _id: id });
 
     if (!updatedUser) {
       return res.status(404).json({ error: "User not found" });
@@ -252,6 +256,7 @@ const updatePassword = async (req, res) => {
     res.status(500).json({ error: "An error occurred" });
   }
 };
+
 
 
 const updateProfile = async (req, res) => {
