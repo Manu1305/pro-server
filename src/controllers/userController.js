@@ -5,9 +5,9 @@ const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const twilio = require('twilio');
-const accountSid = "ACd12e47853cde1bd303cf6bee254219ab";
-const authToken = "23c43668c1ae26a92c7a65724579aba0";
-const verifySid = "VA7b8e5a63d1aff5bd0e4e6a556cc77356";
+const accountSid = "AC6c272cfafb0075585f6f26abf6a891be";
+const authToken = "45432b06534978cb31dcb6c2b1de62cb";
+const verifySid = "VAa8e71f48525eb30c8d34654c6eeb1d4e";
 const client = require("twilio")(accountSid, authToken);
 dotenv.config({ path: "../config/.env" })
 const bcrypt = require("bcrypt");
@@ -214,7 +214,10 @@ const forgetpassword = async (req, res) => {
       from: "manukrishnan858@gmail.com",
       to: email,
       subject: "Hitecmart password change link",
-      text: "Click this link to Update the passsword   " + link,
+      html: `
+      <img style="width:100px;height:40px;object-fit:contain" src="https://hitecmart.in/Image/loho.jpeg" alt="Your Logo">
+        <h2>Click <a style="color:red;" href="${link}">Here</a> to update your password </h2>
+      `,
     };
 
     // get the response
@@ -297,14 +300,21 @@ async function sendToken(user, statusCode, res) {
 const sendOTP = async (req, res) => {
   console.log(req.body + "this is req.body")
   const phone = '+91' + req.body.phone;
-  client.verify.v2
-    .services(verifySid)
+
+  client.verify.v2.services
+  .create({ friendlyName: 'hitecmart login' })
+  .then(service => console.log(service.sid))
+
+  client.verify.v2 
+    .services(verifySid)  
     .verifications.create({ to: phone, channel: "sms" })
     .then((verification) => console.log(verification.status))
     .then(() => {
 
-    });
+    }); 
 }
+
+
 const verifyOtp = async function (req, res) {
 
   const otpCode = req.body.phoneOtp;
