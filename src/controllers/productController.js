@@ -3,7 +3,7 @@ const Products = require("../models/productModel");
 
 const getAllProduct = async (req, res) => {
   try {
-    const allproduct = await Products.find({ isAllowed: true });
+    const allproduct = await Products.find({ status: true });
     res.status(200).json(allproduct);
   } catch (error) {
     res.json({ message: error });
@@ -12,62 +12,18 @@ const getAllProduct = async (req, res) => {
 
 // add new Product
 const addNewProduct = async (req, res) => {
-  const {
-    quantities,
-    selectedSizes,
-    seller,
-    images,
-    brand,
-    description,
-    material,
-    primaryColor,
-    otherColors,
-    ...obj
-  } = req.body;
 
+
+  // const { seller, productId, realPrice, sellingPrice, productDetails, selectedCategory, selectedSubcategory, brand, description,material } = req.body
   console.log(req.body);
-  const quantitiesArray = quantities ? Object.values(quantities) : [];
 
-  const imageBase64 = Object.values(images);
   try {
-    const productData = {
-      seller,
-      productDetail: {
-        selectedSizes: {
-          size1: {
-            selectedSizes: selectedSizes[0],
-            quantities: quantitiesArray[0],
-          },
-          size2: {
-            selectedSizes: selectedSizes[1],
-            quantities: quantitiesArray[1],
-          },
-          size3: {
-            selectedSizes: selectedSizes[2],
-            quantities: quantitiesArray[2],
-          },
-          size4: {
-            selectedSizes: selectedSizes[3],
-            quantities: quantitiesArray[3],
-          },
-        },
-        brand,
-        description,
-        material,
-        primaryColor,
-        otherColors,
-      },
-      ...obj,
+ 
 
-      images: imageBase64,
-    };
-
-    const user = new Products({ ...productData, isAllowed: false });
-    const ack = await user.save();
-
-    const allData = await Products.find();
-    // console.log(allData);
-    res.send("added");
+    const product = new Products({ ...req.body,  });
+    const ack = await product.save();
+    
+   res.send(ack);
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -89,11 +45,11 @@ const requestedProducts = async (req, res) => {
     let requestedProducts;
 
     if (type === "admin") {
-      requestedProducts = await Products.find({ isAllowed: false });
+      requestedProducts = await Products.find({ status: false });
     }
     if (type === "seller") {
       requestedProducts = await Products.find({ seller: seller });
-      requestedProducts.filter((prodcut) => prodcut.isAllowed === false);
+      requestedProducts.filter((prodcut) => prodcut.status === false);
     }
 
     console.log("DATA", requestedProducts);
@@ -116,7 +72,7 @@ const allowRequestedProducts = async (req, res) => {
     }
 
     const updateProduct = await Products.findByIdAndUpdate(req.params.id, {
-      isAllowed: true,
+      status: true,
     });
 
     console.log(updateProduct);
@@ -144,7 +100,7 @@ const removeRequestedProducts = async (req, res) => {
       // sellerId: email,
       heading: heading,
       message: desc,
-      for:email
+      for: email
     });
 
     const ack = newNoti.save();

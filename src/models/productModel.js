@@ -1,97 +1,44 @@
 const mongoose = require("mongoose");
 
-const selectedSizes = new mongoose.Schema(
-  {
-    size1: {
-      selectedSizes: {
-        type: String,
-        required: false,
-      },
-      quantities: {
-        type: Number,
-        required: false,
-      },
-    },
-    size2: {
-      selectedSizes: {
-        type: String,
-        required: false,
-      },
-      quantities: {
-        type: Number,
-        required: false,
-      },
-    },
-    size3: {
-      selectedSizes: {
-        type: String,
-        required: false,
-      },
-      quantities: {
-        type: Number,
-        required: false,
-      },
-    },
-    size4: {
-      selectedSizes: {
-        type: String,
-        required: false,
-      },
-      quantities: {
-        type: Number,
-        required: false,
-      },
-    },
-  },
-);
+
 
 const productDetail = new mongoose.Schema({
-
-  selectedSizes: {
-    type: selectedSizes,
-    required: true,
+  color: {
+    type: String,
+    require: true
   },
-  brand: {
-    type: String,
+  qtyAndSizes: {
+    type: Object,
+    required: true
   },
-  description: {
-    type: String,
-    required: true,
-  },
-  material: {
-    type: String,
-    required: true,
-  },  primaryColor: {
-    type: String,
-    required: true,
-  },
-  otherColors: {
-    type: String,
-    required: false,
+  images: {
+    type: Array,
+    require: true
   },
 
 });
+
 const products = new mongoose.Schema(
   {
     seller: {
       type: String,
       required: true,
+      default: "M"
     },
     productId: {
       type: String,
       required: true,
     },
+    realPrice: {
+      type: Number,
+      required: true,
+    },
     sellingPrice: {
       type: Number,
     },
-    productDetail: {
-      type: productDetail,
+    productDetails: {
+      type: [productDetail],
       required: true,
-    },
-    images: [],
-    createDate: {
-      type: Date,
-      default: Date.now,
     },
     selectedCategory: {
       type: String,
@@ -101,20 +48,34 @@ const products = new mongoose.Schema(
       type: String,
       required: true,
     },
-    realPrice: {
-      type: Number,
+    brand: {
+      type: String,
       required: true,
     },
-  
-    totalQuantity: {
-      type: Number,
-      required: false,
-      default: 0,
+    description: {
+      type: String,
+      required: true,
     },
+    material: {
+      type: String,
+      required: true,
+    },
+    publishDate: {
+      type: Date,
+      required: false
+    }
+    ,
+    // totalQuantity: {
+    //   type: Number,
+    //   required: false,
+    //   default: 0,
+    // },
+
     WashcareInstructions: {
       type: String,
-      default: 0,
+
     },
+
     numOfReviews: {
       type: Number,
       default: 0,
@@ -135,10 +96,13 @@ const products = new mongoose.Schema(
         },
       },
     ],
-    isAllowed: {
+    status: {
       type: Boolean,
+      required: true,
+      default: false
     },
   },
+
   { timestamps: true }
 );
 
