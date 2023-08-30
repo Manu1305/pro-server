@@ -1,68 +1,50 @@
 const Order = require("../models/Order");
 const Product = require("../models/productModel");
 const users = require("../models/userModel");
-
 // CREATE
 const createOrder = async (req, res) => {
   const userId = req.user.id;
+
+  // update
   const { products, address } = req.body;
 
-  // console.log("address",address)
-
   try {
+    // Check the availability of product quantities
+    let allProducts = products.items;
 
-    // mapping through every cart item
-    for (const everyProduct of products) {
-      const { productId, sizeAndQua, productDetails } = everyProduct;
+    for (const everyProduct of allProducts) {
+      // console.log(everyProduct)
+      const { productId, sizeAndQua } = everyProduct;
+      console.log(sizeAndQua);
 
       // get the product from database
       const existingProduct = await Product.findById(productId);
 
-      const targetColor = productDetails.color
-
-
-      // match color
-      const updateColorQua = existingProduct.productDetails.find((prod) =>
-        prod.color === targetColor
-      )
-      const indexOfColor = existingProduct.productDetails.findIndex((prod) =>
-        prod.color === targetColor
-      )
-
-
-      // checking quantities
-      let checkQua;
-      if (updateColorQua) {
-        checkQua = Object.keys(sizeAndQua).every(size =>
-          updateColorQua.qtyAndSizes[size] >= sizeAndQua[size]
-        )
-
-      } else {
-        // give quantiy error
-        res.status(403).json({ error: "Qunatity error" })
+      if (!existingProduct) {
+        return res.status(404).json({ error: "Product not found" });
       }
 
+      // check if the provided quantities are availabe for each item(size)
+      for (const [size, quantity] of Object.entries(sizeAndQua)) {
+        const availableQuantity = existingProduct.productDetail.qtyAndSizes[size];
 
-
-      // quantity is available place an order
-      if (checkQua) {
-        // substarct quantities from the found object    
-        Object.keys(sizeAndQua).forEach(size => {  
-          existingProduct.productDetails[indexOfColor].qtyAndSizes[size] -= sizeAndQua[size];
-        });
+        if (quantity.quantities > availableQuantity) {
+          return res.status(401).json({
+            error: `Insufficient quantities for ${quantity.selectedSizes}`,
+          });
+        }
       }
     }
 
     // if quantity is available place order
-    const createdOrders = products.map(async (element) => {
 
-      // console.log("element", element)
+    const createdOrders = products.items.map(async (element) => {
+
+      console.log("element", element)
       const sellerAdd = await users.find({
         email: element.productDetails.seller,
       });
 
-
-      console.log("sellerAdd",sellerAdd)
 
       const order = new Order({
         userId,
@@ -94,36 +76,35 @@ const createOrder = async (req, res) => {
 
     const allplacedOreders = Promise.all(createdOrders)
     // Update database after placed order
-    // for (const product of products.items) {
-    //   const { productId, sizeAndQua } = product;
+    for (const product of products.items) {
+      const { productId, sizeAndQua } = product;
 
-    //   // get the ordered product from databse
-    //   const existingProduct = await Product.findById(productId);
+      // get the ordered product from databse
+      const existingProduct = await Product.findById(productId);
 
-    //   if (existingProduct) {
-    //     // Update the Product quantities for each size
-    //     for (const [size, quantity] of Object.entries(sizeAndQua)) {
-    //       if (existingProduct.productDetail.selectedSizes[size]?.quantities) {
-    //         console.log(
-    //           "CHECK",
-    //           existingProduct.productDetail.selectedSizes[size].quantities
-    //         );
-    //         existingProduct.productDetail.selectedSizes[size].quantities -=
-    //           quantity.quantities;
-    //       }
-    //     }
-    //     // const user = new Order({ ...existingProduct, isAllowed: false });
-    //     // const ack = await user.save();
-    //     await existingProduct.save();
-    //   }
-    // }
+      if (existingProduct) {
+        // Update the Product quantities for each size
+        for (const [size, quantity] of Object.entries(sizeAndQua)) {
+          if (existingProduct.productDetail.selectedSizes[size]?.quantities) {
+            console.log(
+              "CHECK",
+              existingProduct.productDetail.selectedSizes[size].quantities
+            );
+            existingProduct.productDetail.selectedSizes[size].quantities -=
+              quantity.quantities;
+          }
+        }
+        // const user = new Order({ ...existingProduct, isAllowed: false });
+        // const ack = await user.save();
+        await existingProduct.save();
+      }
+    }
 
     const orders = await Order.find({ orderStatus: "Pending" });
 
     const ids = orders.map((order) => order._id);
 
-    res.status(200).json({ message: "Order placed", ids ,placedOrder:allplacedOreders});
-
+    res.status(200).json({ message: "Order placed", ids });
   } catch (error) {
     console.log(error);
   }
@@ -168,5 +149,6 @@ const allOrders = async (req, res) => {
   }
 };
 
+// const
 
 module.exports = { createOrder, updateOrder, allOrders };

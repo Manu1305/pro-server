@@ -82,28 +82,6 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// befor updating user collection
-// UserSchema.pre("save", async function (next) {
-//     console.log("HI MAnu")
-//     console.log(this.password)
-
-//   if (!this.isModified("password")) {
-//     const salt = await bcrypt.genSaltSync(10);
-//     this.password = bcrypt.hashSync(this.password, salt);
-//   } 
-//   else if (this.isModified("password")) {
-//     const salt = await bcrypt.genSaltSync(10);
-//     this.password = bcrypt.hashSync(this.password, salt);
-//   } 
-//   else {
-
-//     next()
-//   }
-
-// });
-
-// login match password
 UserSchema.methods.matchPasswords = async function (password) {
   console.log(this.password)
   return await bcrypt.compare(password, this.password);
@@ -111,7 +89,7 @@ UserSchema.methods.matchPasswords = async function (password) {
 
 UserSchema.methods.getSignedToken = async function () {
   return await jwt.sign({ id: this._id }, process.env.JWT_SECRETE, {
-    expiresIn: "1d",
+    expiresIn: "30d",
   });
 };
 

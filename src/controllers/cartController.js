@@ -4,17 +4,17 @@ const Product = require("../models/productModel");
 const addToCart = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { productId, sizeWithQuantity, quantity } = req.body;
+    const { productId, sizeAndQua, totalItems , productDetails} = req.body;
 
     // Find the product by its ID
-    const product = await Product.findOne({ _id: productId });
+    const product = await Product.findById(productId);
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // Calculate the total price
-    const totalPrice = product.sellingPrice * quantity;
+    // Calculate the total cart price
+    const itemPrice = Number(product.sellingPrice * totalItems) ;
 
     // Find the cart for the given userId
     let cart = await Cart.findOne({ userId });
@@ -26,17 +26,10 @@ const addToCart = async (req, res) => {
         items: [
           {
             productId,
-            sizeWithQuantity,
-            totalQuantity: quantity,
-            productDetails: {
-              barnd: product.productDetail.brand,
-              category: product.selectedCategory,
-              images: product.images[0],
-              description: product.productDetail.description,
-              price: product.sellingPrice,
-              seller: product.seller,
-            },
-            totalPrice: totalPrice,
+            sizeAndQua,
+            totalQuantity: totalItems ,
+            productDetails,
+            itemPrice
           },
         ],
       });
@@ -48,32 +41,26 @@ const addToCart = async (req, res) => {
 
       if (existingItem) {
         // update item
-        existingItem.sizeWithQuantity = sizeWithQuantity;
-        existingItem.totalQuantity = quantity;
-        existingItem.totalPrice = totalPrice;
+        existingItem.sizeAndQua = sizeAndQua;
+        existingItem.totalQuantity = totalItems ;
+        existingItem.itemPrice = itemPrice;
+        // existingItem.productDetails.images = 
       } else {
         // If the item doesn't exist,
         cart.items.push({
           productId,
-          sizeWithQuantity,
-          totalQuantity: quantity,
-          productDetails: {
-            barnd: product.productDetail.brand,
-            category: product.selectedCategory,
-            images: product.images[0],
-            description: product.productDetail.description,
-            price: product.sellingPrice,
-            seller: product.seller,
-          },
-          totalPrice: totalPrice,
+          sizeAndQua,
+          totalQuantity: totalItems ,
+          productDetails,
+          itemPrice
         });
       }
     }
 
     let subTotal = 0;
     cart.items.forEach((singleItem) => {
-      console.log(singleItem.totalPrice);
-      subTotal += singleItem.totalPrice;
+      console.log(singleItem.itemPrice);
+      subTotal += singleItem.itemPrice;
     });
 
     // update sub total
@@ -96,7 +83,6 @@ const getUserCart = async (req, res) => {
     if (!carts) {
       return res.status(200).json({ Message: "Your cart is empty...!" });
     }
-    // console.log("carts", carts);
     res.status(200).json(carts);
   } catch (error) {
     console.log(error);
@@ -127,7 +113,7 @@ const deleteCartItem = async (req, res) => {
       return res.status(404).json({ error: "Item not found in cart" });
     }
     // Update the subTotal
-    cart.subTotal -= cart.items[itemIndex].totalPrice;
+    cart.subTotal -= cart.items[itemIndex].itemPrice;
 
     // Remove the item from the cart items array
     cart.items.splice(itemIndex, 1);

@@ -3,61 +3,15 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const selectedSizes = new Schema(
-  {
-    size1: {
-      selectedSizes: {
-        type: String,
-        required: false,
-      },
-      quantities: {
-        type: Number,
-        required: false,
-      },
-    },
-    size2: {
-      selectedSizes: {
-        type: String,
-        required: false,
-      },
-      quantities: {
-        type: Number,
-        required: false,
-      },
-    },
-    size3: {
-      selectedSizes: {
-        type: String,
-        required: false,
-      },
-      quantities: {
-        type: Number,
-        required: false,
-      },
-    },
-    size4: {
-      selectedSizes: {
-        type: String,
-        required: false,
-      },
-      quantities: {
-        type: Number,
-        required: false,
-      },
-    },
-  }
-  // { timestamps: true }
-);
 
 let ItemSchema = new Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
   },
-  sizeWithQuantity: {
-    type: selectedSizes,
+  sizeAndQua: {
+    type: Object,
     required: true,
-    // min: [5, "Quantity can not be less than 1."],
   },
   totalQuantity: {
     type: Number,
@@ -68,7 +22,7 @@ let ItemSchema = new Schema({
     require: true,
   },
 
-  totalPrice: {
+  itemPrice: {
     type: Number,
     required: true,
   },

@@ -25,7 +25,7 @@ const products = new mongoose.Schema(
       required: true,
       default: "M"
     },
-    productId: {
+    productCode: {
       type: String,
       required: true,
     },
