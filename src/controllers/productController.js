@@ -21,7 +21,7 @@ const addNewProduct = async (req, res) => {
   try {
  
 
-    const product = new Products({ ...req.body,  });
+    const product = new Products({ ...req.body,seller:req.user.email  });
     const ack = await product.save();
     
    res.send(ack);

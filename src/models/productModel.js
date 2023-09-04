@@ -27,7 +27,7 @@ const products = new mongoose.Schema(
     },
     productCode: {
       type: String,
-      required: true,
+      // required: true,
     },
     realPrice: {
       type: Number,
