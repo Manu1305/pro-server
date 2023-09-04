@@ -263,8 +263,8 @@ const updatePassword = async (req, res) => {
 
 
 const updateProfile = async (req, res) => {
+  
   const { _id } = req.user;
-
   console.log("req.user", req.user);
   const { name, phone } = req.body;
 
