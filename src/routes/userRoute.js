@@ -42,13 +42,12 @@ router.put("/updatePassword", updatePassword);
 
 // subscription
 
-
 // get all users     ------Admin
 router.get("/allUserData", getAllUser);
 
 
 router.post("/send-otp", sendOTP);
 router.post("/verify-otp", verifyOtp);
-
+ 
 
 module.exports = router;
