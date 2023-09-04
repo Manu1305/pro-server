@@ -6,7 +6,7 @@ const {
   createOrder,
   updateOrder,
   allOrders,
-  getAdminOrders
+  // getAdminOrders
 } = require("../controllers/orderController");
 
 // Create Order
