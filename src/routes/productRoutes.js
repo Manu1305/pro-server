@@ -13,7 +13,7 @@ const {
   updateProduct,
 } = require("../controllers/productController");
 
-router.post("/add-new-product", addNewProduct);
+router.post("/add-new-product", authMiddleware, addNewProduct);
 
 router.get("/get-all-products", getAllProduct);
 
