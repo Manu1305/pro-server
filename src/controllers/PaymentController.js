@@ -12,6 +12,7 @@ const instance = new Razorpay({
   key_secret: process.env.RAZORPAT_API_SECRET_KEY,
 });
 
+
 // order creation
 const checkout = async (req, res, next) => {
   const options = {
@@ -22,20 +23,19 @@ const checkout = async (req, res, next) => {
     const order = await instance.orders
       .create(options)
       .then((res) => {
-        // console.log(res);
         return res;
       })
       .catch((err) => {
         console.log(err);
         return false;
       });
-    // console.log(order);
 
     res.status(200).json(order);
   } catch (error) {
     console.log(error);
   }
 };
+
 
 const paymentVerification = async (req, res, next) => {
   const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
@@ -90,13 +90,14 @@ const paymentVerification = async (req, res, next) => {
 
       await payments.save();
       const protocol = req.protocol;
-      const host = req.host;
+      const host = req.hostname;
       const PORT = process.env.PORT
+      console.log("inside make payment api")
       return res.redirect(
         `https://hitecmart.in/payment_succesfull?reference=${razorpay_payment_id}`
       );
     } else {
-      console.log("Please trya agin");
+      console.log("Please try agin");
       return res.status(400).json({ success: false });
     }
     // res.status(200).json({ success: true });
@@ -104,6 +105,7 @@ const paymentVerification = async (req, res, next) => {
     console.log(error);
   }
 };
+
 
 const getApiKey = async (req, res) =>
   res.status(200).json({ key: process.env.RAZORPAT_API_KEY_ID });
@@ -114,8 +116,8 @@ const refundCheckout = async (req, res) => {
   const { paymentId, refundAmount } = req.body;
 
 
-  console.log("refundAmount",refundAmount)
-  console.log("paymentId",paymentId)
+  console.log("refundAmount", refundAmount)
+  console.log("paymentId", paymentId)
 
   // Normal payment method
   receiptNumber++;
@@ -137,8 +139,9 @@ const refundCheckout = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
 // refund verification
-const refundVerification = async () => {};
+const refundVerification = async () => { };
 
 module.exports = {
   checkout,

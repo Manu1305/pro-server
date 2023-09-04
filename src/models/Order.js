@@ -13,11 +13,11 @@ const Order = new mongoose.Schema(
       ref: "hitec_products",
       required: true,
     },
-    prdDeta: {
+    prdData: {
       type: Object,
       required: true,
     },
-    sizeWithQuantity: {
+    sizeAndQua: {
       type: Object,
       required: true,
     },
