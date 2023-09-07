@@ -48,6 +48,10 @@ const products = new mongoose.Schema(
       type: String,
       required: true,
     },
+    collections: {
+      type: String,
+      required: true,
+    },
     brand: {
       type: String,
       required: true,
@@ -65,11 +69,11 @@ const products = new mongoose.Schema(
       required: false
     }
     ,
-    // totalQuantity: {
-    //   type: Number,
-    //   required: false,
-    //   default: 0,
-    // },
+    stock: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
 
     WashcareInstructions: {
       type: String,

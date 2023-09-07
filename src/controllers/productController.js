@@ -14,14 +14,13 @@ const getAllProduct = async (req, res) => {
 const addNewProduct = async (req, res) => {
 
 
-
   try {
- 
 
-    const product = new Products({ ...req.body,seller:req.user.email  });
+
+    const product = new Products({ ...req.body, seller: req.user.email });
     const ack = await product.save();
-    
-   res.send(ack);
+
+    res.send(ack);
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;

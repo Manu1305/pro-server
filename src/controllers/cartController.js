@@ -42,7 +42,7 @@ const addToCart = async (req, res) => {
       if (existingItem) {
         // update item
         existingItem.sizeAndQua = sizeAndQua;
-        existingItem.totalQuantity = totalItems ;
+        existingItem.stock = totalItems ;
         existingItem.itemPrice = itemPrice;
         // existingItem.productDetails.images = 
       } else {

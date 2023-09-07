@@ -68,7 +68,7 @@ const createOrder = async (req, res) => {
         seller: element.productDetails.seller,
         ordPrc: element.itemPrice,
         isAssignDlv: false,
-        quantity: element.totalQuantity,
+        quantity: element.stock,
         raz_paymentId: "",
         raz_orderId: "",
         orderStatus: "Pending",
@@ -135,7 +135,6 @@ const allOrders = async (req, res) => {
       orders = await Order.find();
     } else if (req.user.urType === "seller") {
       orders = await Order.find({ seller: req.user.email });
-      console.log(orders);
     } else {
       orders = await Order.find({ userId: req.user.id });
     }
