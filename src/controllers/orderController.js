@@ -5,14 +5,12 @@ const users = require("../models/userModel");
 // CREATE
 const createOrder = async (req, res) => {
   const userId = req.user.id;
-  const { products, address } = req.body;
-
-  // console.log("address",address)
+  const { products, address, } = req.body;
 
   try {
 
     // mapping through every cart item
-    for (const everyProduct of products) {
+    for (const everyProduct of products.items) {
       const { productId, sizeAndQua, productDetails } = everyProduct;
 
       // get the product from database
@@ -31,46 +29,44 @@ const createOrder = async (req, res) => {
 
 
       // checking quantities
-      let checkQua;
-      if (updateColorQua) {
-        checkQua = Object.keys(sizeAndQua).every(size =>
-          updateColorQua.qtyAndSizes[size] >= sizeAndQua[size]
-        )
+      // let checkQua;
+      // if (updateColorQua) {
+      //   checkQua = Object.keys(sizeAndQua).every(size =>
+      //     updateColorQua.qtyAndSizes[size] >= sizeAndQua[size]
+      //   )
 
-      } else {
-        // give quantiy error
-        res.status(403).json({ error: "Qunatity error" })
-      }
+      // } else {
+      //   // give quantiy error
+      //   res.status(403).json({ error: "Qunatity error" })
+      // }
 
 
 
       // quantity is available place an order
-      if (checkQua) {
-        // substarct quantities from the found object    
-        Object.keys(sizeAndQua).forEach(size => {  
-          existingProduct.productDetails[indexOfColor].qtyAndSizes[size] -= sizeAndQua[size];
-        });
-      }
+      // if (checkQua) {
+      //   // substarct quantities from the found object    
+      //   Object.keys(sizeAndQua).forEach(size => {  
+      //     existingProduct.productDetails[indexOfColor].qtyAndSizes[size] -= sizeAndQua[size];
+      //   });
+      // }
     }
 
     // if quantity is available place order
-    const createdOrders = products.map(async (element) => {
+    const createdOrders = products.items.map(async (element) => {
 
-      // console.log("element", element)
+
+      // get seller address
       const sellerAdd = await users.find({
         email: element.productDetails.seller,
       });
 
-
-      console.log("sellerAdd",sellerAdd)
-
       const order = new Order({
         userId,
         productId: element.productId,
-        prdDeta: element.productDetails,
+        prdData: element.productDetails,
         sizeAndQua: element.sizeAndQua,
         seller: element.productDetails.seller,
-        ordPrc: element.totalPrice,
+        ordPrc: element.itemPrice,
         isAssignDlv: false,
         quantity: element.totalQuantity,
         raz_paymentId: "",
@@ -91,32 +87,13 @@ const createOrder = async (req, res) => {
       return await order.save();
     });
 
+    console.log("createdOrders",createdOrders)
 
-    const allplacedOreders = Promise.all(createdOrders)
-    // Update database after placed order
-    // for (const product of products.items) {
-    //   const { productId, sizeAndQua } = product;
 
-    //   // get the ordered product from databse
-    //   const existingProduct = await Product.findById(productId);
+    const allplacedOreders = await Promise.all(createdOrders)
 
-    //   if (existingProduct) {
-    //     // Update the Product quantities for each size
-    //     for (const [size, quantity] of Object.entries(sizeAndQua)) {
-    //       if (existingProduct.productDetail.selectedSizes[size]?.quantities) {
-    //         console.log(
-    //           "CHECK",
-    //           existingProduct.productDetail.selectedSizes[size].quantities
-    //         );
-    //         existingProduct.productDetail.selectedSizes[size].quantities -=
-    //           quantity.quantities;
-    //       }
-    //     }
-    //     // const user = new Order({ ...existingProduct, isAllowed: false });
-    //     // const ack = await user.save();
-    //     await existingProduct.save();
-    //   }
-    // }
+
+    console.log("allplacedOreders",allplacedOreders)
 
     const orders = await Order.find({ orderStatus: "Pending" });
 
@@ -150,9 +127,10 @@ const updateOrder = async (req, res) => {
 // user order history for admin/seller/user
 const allOrders = async (req, res) => {
   try {
-    console.warn("type orc", req.user.email);
-    let orders;
+    // console.log("type orc", req.user.email);
+    // let orders = await Order.find({ userId: req.user.id })
 
+    let orders;
     if (req.user.urType === "admin") {
       orders = await Order.find();
     } else if (req.user.urType === "seller") {
@@ -161,6 +139,8 @@ const allOrders = async (req, res) => {
     } else {
       orders = await Order.find({ userId: req.user.id });
     }
+
+    
 
     res.status(200).json(orders);
   } catch (error) {

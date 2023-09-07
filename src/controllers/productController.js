@@ -5,7 +5,6 @@ const getAllProduct = async (req, res) => {
   try {
     const allproduct = await Products.find();
     res.status(200).json(allproduct);
-    console.log("sent")
   } catch (error) {
     res.json({ message: error });
   }
@@ -15,8 +14,6 @@ const getAllProduct = async (req, res) => {
 const addNewProduct = async (req, res) => {
 
 
-  // const { seller, productId, realPrice, sellingPrice, productDetails, selectedCategory, selectedSubcategory, brand, description,material } = req.body
-  console.log(req.body);
 
   try {
  

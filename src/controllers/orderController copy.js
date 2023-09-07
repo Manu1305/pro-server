@@ -49,7 +49,7 @@ const createOrder = async (req, res) => {
       const order = new Order({
         userId,
         productId: element.productId,
-        prdDeta: element.productDetails,
+        prdData: element.productDetails,
         sizeAndQua: element.sizeAndQua,
         seller: element.productDetails.seller,
         ordPrc: element.totalPrice,
