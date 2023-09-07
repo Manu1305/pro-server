@@ -17,6 +17,7 @@ const updateWishlistRouter = require('./src/routes/wishRoutes')
 const sellerRouter = require("./src/routes/sellerRouter");
 const subsRouter = require("./src/routes/subRoute")
 const notifRouter = require("./src/routes/notiRoute")
+const dashboard =require("./src/routes/Dashboard")
 const connectDB = require("./src/config/db");
 
 dotenv.config({ path: './src/config/.env' });
@@ -62,6 +63,7 @@ app.use("/return", ReturnOrder);
 app.use("/seller", sellerRouter);
 app.use("/subscription", subsRouter);
 app.use("/noti", notifRouter);
+app.use("/dashboard", dashboard);
 
 
 const server = app.listen(PORT, () => {
