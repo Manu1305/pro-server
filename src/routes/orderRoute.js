@@ -13,7 +13,7 @@ const {
 router.post("/placeOrder", authMiddleware, createOrder);
 
 // update Order
-router.put("/update-order", authMiddleware, updateOrder);
+router.put("/update-order/:id", updateOrder);
 
 // get orders by type
 router.get("/get-all-orders",authMiddleware,allOrders);

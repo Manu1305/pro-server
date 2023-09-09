@@ -24,7 +24,7 @@ const authMiddleware = async (req, res, next) => {
     const user = await Users.findById(decode.id);
 
     if (!user) {
-      return res.redirect('https://hitecmart.in/login');
+      return res.redirect('https://hitecmart.com/login');
     }
 
     req.user = user;
