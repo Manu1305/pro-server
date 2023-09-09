@@ -68,7 +68,7 @@ const createOrder = async (req, res) => {
         seller: element.productDetails.seller,
         ordPrc: element.itemPrice,
         isAssignDlv: false,
-        quantity: element.totalQuantity,
+        quantity:0,
         raz_paymentId: "",
         raz_orderId: "",
         orderStatus: "Pending",
@@ -82,24 +82,25 @@ const createOrder = async (req, res) => {
         trackId: null,
 
         pType: "",
+        
       });
 
       return await order.save();
     });
 
-    console.log("createdOrders",createdOrders)
+    console.log("createdOrders", createdOrders)
 
 
     const allplacedOreders = await Promise.all(createdOrders)
 
 
-    console.log("allplacedOreders",allplacedOreders)
+    console.log("allplacedOreders", allplacedOreders)
 
     const orders = await Order.find({ orderStatus: "Pending" });
 
     const ids = orders.map((order) => order._id);
 
-    res.status(200).json({ message: "Order placed", ids ,placedOrder:allplacedOreders});
+    res.status(200).json({ message: "Order placed", ids, placedOrder: allplacedOreders });
 
   } catch (error) {
     console.log(error);
@@ -127,20 +128,18 @@ const updateOrder = async (req, res) => {
 // user order history for admin/seller/user
 const allOrders = async (req, res) => {
   try {
-    // console.log("type orc", req.user.email);
-    // let orders = await Order.find({ userId: req.user.id })
+
 
     let orders;
     if (req.user.urType === "admin") {
       orders = await Order.find();
     } else if (req.user.urType === "seller") {
       orders = await Order.find({ seller: req.user.email });
-      console.log(orders);
     } else {
       orders = await Order.find({ userId: req.user.id });
     }
 
-    
+
 
     res.status(200).json(orders);
   } catch (error) {

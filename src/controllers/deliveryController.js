@@ -190,7 +190,6 @@ const assignReturnDelivery = async (req, res) => {
     }
 
     const updateReturnOrder = await Order.findByIdAndUpdate(req.params.id, {
-      // isAssignDlv: true,
       orderStatus: "Return Initiated",
     });
 
@@ -200,7 +199,6 @@ const assignReturnDelivery = async (req, res) => {
   } catch (error) {
     if (error.code === 11000) {
       res.status(500).send({ code: error.code, errorMessage });
-      return;
     }
   }
 };
@@ -223,7 +221,7 @@ const returnOrderPicked = async (req, res, next) => {
   }
 };
 
-//delivered from delivery guy end waititng fro admin approval
+//delivered from delivery guy end waititng from admin approval
 const returnConfirmation = async (req, res, next) => {
   try {
     console.log(req.params.id);
@@ -292,9 +290,12 @@ const AdminReturnConfirmation = async (req, res, next) => {
   }
 };
 
+
 const allRefunds = async (req, res) => {
   const refunda = await instance.refunds.all(options);
 };
+
+
 //uploading TrackingID
 const updateTrackId = async (req, res) => {
   try {
