@@ -44,7 +44,7 @@ const addToCart = async (req, res) => {
         existingItem.sizeAndQua = sizeAndQua;
         existingItem.stock = totalItems ;
         existingItem.itemPrice = itemPrice;
-        // existingItem.productDetails.images = 
+        existingItem.productDetails = productDetails
       } else {
         // If the item doesn't exist,
         cart.items.push({
