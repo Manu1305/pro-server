@@ -92,7 +92,11 @@ const paymentVerification = async (req, res, next) => {
       const protocol = req.protocol;
       const host = req.hostname;
       const PORT = process.env.PORT
-      console.log("inside make payment api")
+      
+
+      const deletePendingOrders =await Order.deleteMany({orderStatus:"Pending"})
+
+
       return res.redirect(
         `https://hitecmart.in/payment_succesfull?reference=${razorpay_payment_id}`
       );

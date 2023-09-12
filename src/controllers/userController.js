@@ -42,8 +42,6 @@ const loginApi = async (req, res) => {
   try {
     const user = await Users.findOne({ email });
 
-    // console.log(user)
-
     if (!user) {
       return res.status(404).json({ message: "User not exist" });
     }
@@ -85,8 +83,8 @@ const signUpApi = async (req, res) => {
 
       const { name, email, phone, password, gst, urType, address, shopName } =
         userData;
-        const salt = await bcrypt.genSaltSync(10);
-    const hashedpassword = bcrypt.hashSync(password, salt);
+      const salt = await bcrypt.genSaltSync(10);
+      const hashedpassword = bcrypt.hashSync(password, salt);
 
       // register user
       const user = new Users({
@@ -94,7 +92,7 @@ const signUpApi = async (req, res) => {
         name,
         email,
         phone,
-        password:hashedpassword,
+        password: hashedpassword,
         urType,
         subsPlan: "Noraml",
         shopName,
@@ -120,13 +118,13 @@ const signUpApi = async (req, res) => {
       // if buyer
       const { name, email, phone, password, gst, urType } = userData;
       const salt = await bcrypt.genSaltSync(10);
-    const hashedpassword = bcrypt.hashSync(password, salt);
+      const hashedpassword = bcrypt.hashSync(password, salt);
       const user = new Users({
         profilePicture: "bsdmbn",
         name,
         email,
         phone,
-        password:hashedpassword,
+        password: hashedpassword,
         urType,
         gst,
         subsPlan: "Not Applicable",
@@ -263,7 +261,7 @@ const updatePassword = async (req, res) => {
 
 
 const updateProfile = async (req, res) => {
-  
+
   const { _id } = req.user;
   console.log("req.user", req.user);
   const { name, phone } = req.body;
@@ -302,16 +300,16 @@ const sendOTP = async (req, res) => {
   const phone = '+91' + req.body.phone;
 
   client.verify.v2.services
-  .create({ friendlyName: 'hitecmart login' })
-  .then(service => console.log(service.sid))
+    .create({ friendlyName: 'hitecmart login' })
+    .then(service => console.log(service.sid))
 
-  client.verify.v2 
-    .services(verifySid)  
+  client.verify.v2
+    .services(verifySid)
     .verifications.create({ to: phone, channel: "sms" })
     .then((verification) => console.log(verification.status))
     .then(() => {
 
-    }); 
+    });
 }
 
 
