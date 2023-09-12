@@ -98,7 +98,7 @@ const paymentVerification = async (req, res, next) => {
 
 
       return res.redirect(
-        `https://hitecmart.in/payment_succesfull?reference=${razorpay_payment_id}`
+        `https://hitecmart.com/payment_succesfull?reference=${razorpay_payment_id}`
       );
     } else {
       console.log("Please try agin");

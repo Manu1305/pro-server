@@ -136,10 +136,10 @@ const createOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   try {
-    const updatedOrder = await Order.findByAndUpdate(
+    const updatedOrder = await Order.findByIdAndUpdate(
       req.params.id,
       {
-        $set: req.body,
+        orderStatus:"Cancelled",
       },
       { new: true }
     );
