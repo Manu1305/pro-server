@@ -18,11 +18,11 @@ const instance = new Razorpay({
 const createSubPlan = async (req, res) => {
   try {
     const ack = await instance.plans.create({
-      period: "daily",
-      interval: 7,
+      period: "yearly",
+      interval: 1,
       item: {
         name: "Hitech Premium account - daily",
-        amount: 9999,
+        amount: 999900,
         currency: "INR",
         description: "Description for the test plan",
       },
