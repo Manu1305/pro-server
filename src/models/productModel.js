@@ -56,34 +56,66 @@ const products = new mongoose.Schema(
       type: String,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
     },
-    material: {
-      type: String,
-      required: true,
+    productInfo: {
+      Material: {
+        type: String,
+        required: true,
+      },
+      Packoff: {
+        type: String,
+        required: true,
+      },
+      Closure: {
+        type: String,
+        required: true,
+      },
+      Fit: {
+        type: String,
+        required: true,
+      },
+      Pattern: {
+        type: String,
+        required: true,
+      },
+      Idealfor: {
+        type: String,
+        required: true,
+      },
+      Washcare: {
+        type: String,
+      },
+      Convertible: {
+        type: Boolean,
+        required: true,
+      },
     },
     publishDate: {
       type: Date,
       required: false
-    }
-    ,
+    },
     stock: {
       type: Number,
       required: true,
       default: 0,
     },
-
-    WashcareInstructions: {
-      type: String,
-
-    },
-
     numOfReviews: {
       type: Number,
       default: 0,
     },
+    MoreDetails: {
+      type: String,
+      required: false,
+      default:null
+    },
+
     reviews: [
       {
         name: {

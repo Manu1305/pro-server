@@ -16,39 +16,27 @@ const createOrder = async (req, res) => {
       // get the product from database
       const existingProduct = await Product.findById(productId);
 
-      const targetColor = productDetails.color
 
+      // target color 
+      const targetColor = productDetails.color
 
       // match color
       const updateColorQua = existingProduct.productDetails.find((prod) =>
         prod.color === targetColor
       )
-      const indexOfColor = existingProduct.productDetails.findIndex((prod) =>
-        prod.color === targetColor
-      )
+
+      // check quantity
+      let isQuantityAvailable = Object.keys(sizeAndQua).every((size) => {
+        return updateColorQua.qtyAndSizes[size] && updateColorQua.qtyAndSizes[size] >= sizeAndQua[size];
+      });
+
+      console.log("isQuantityAvailable", isQuantityAvailable);
+
+      if (!isQuantityAvailable) {
+        return res.status(401).json({ message: `Quantity is not available for the ${productDetails.brand}` })
+      }
 
 
-      // checking quantities
-      // let checkQua;
-      // if (updateColorQua) {
-      //   checkQua = Object.keys(sizeAndQua).every(size =>
-      //     updateColorQua.qtyAndSizes[size] >= sizeAndQua[size]
-      //   )
-
-      // } else {
-      //   // give quantiy error
-      //   res.status(403).json({ error: "Qunatity error" })
-      // }
-
-
-
-      // quantity is available place an order
-      // if (checkQua) {
-      //   // substarct quantities from the found object    
-      //   Object.keys(sizeAndQua).forEach(size => {  
-      //     existingProduct.productDetails[indexOfColor].qtyAndSizes[size] -= sizeAndQua[size];
-      //   });
-      // }
     }
 
     // if quantity is available place order
@@ -68,7 +56,7 @@ const createOrder = async (req, res) => {
         seller: element.productDetails.seller,
         ordPrc: element.itemPrice,
         isAssignDlv: false,
-        quantity:0,
+        quantity: 0,
         raz_paymentId: "",
         raz_orderId: "",
         orderStatus: "Pending",
@@ -82,19 +70,56 @@ const createOrder = async (req, res) => {
         trackId: null,
 
         pType: "",
-        
+
       });
+
+
 
       return await order.save();
     });
 
-    console.log("createdOrders", createdOrders)
+
+    // decrease qunatity after placing an order
+    products.items.forEach(async element => {
+      const { productId, sizeAndQua, productDetails } = element
+      // console.log(element)
+
+      // update orders
+      const updateOreders = await Product.findById(productId);
+      // console.log("updateOreders", updateOreders);
+
+
+      const targetColor = productDetails.color
+
+
+      let index;
+      // match color
+      const updateColorQua = updateOreders.productDetails.find((prod, ind) => {
+        index = ind
+        return prod.color === targetColor
+      }
+      );
+
+      // update quantity
+      for (const size in sizeAndQua) {
+        if (sizeAndQua.hasOwnProperty(size) && updateColorQua.qtyAndSizes.hasOwnProperty(size)) {
+          updateColorQua.qtyAndSizes[size] -= sizeAndQua[size];
+        }
+      };
+      // console.log("index", index)
+      // console.log("updateColorQua", updateColorQua)
+      updateOreders.productDetails[index] = updateColorQua
+      await updateOreders.save()
+
+
+
+
+
+    });
 
 
     const allplacedOreders = await Promise.all(createdOrders)
 
-
-    console.log("allplacedOreders", allplacedOreders)
 
     const orders = await Order.find({ orderStatus: "Pending" });
 
