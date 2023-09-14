@@ -134,21 +134,70 @@ const createOrder = async (req, res) => {
 
 // UPDATE => only admin can update
 
+// const updateOrder = async (req, res) => {
+//   try {
+//     const updatedOrder = await Order.findByIdAndUpdate(
+//       req.params.id,
+//       {
+//         orderStatus:"Cancelled",
+//       },
+//       { new: true }
+//     );
+
+//     res.json(200).status(updatedOrder);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 const updateOrder = async (req, res) => {
+  const { products } = req.body;
+
   try {
     const updatedOrder = await Order.findByIdAndUpdate(
       req.params.id,
       {
-        orderStatus:"Cancelled",
+        orderStatus: "Cancelled",
       },
       { new: true }
     );
 
-    res.json(200).status(updatedOrder);
+    // Loop through the products in the request body
+    for (const element of products) {
+      const { productId, sizeAndQua } = element;
+
+      // Find the product by its ID
+      const updateProduct = await Product.findById(productId);
+
+      // Check if the product exists
+      if (!updateProduct) {
+        // Handle the case where the product is not found
+        console.log(`Product with ID ${productId} not found`);
+        continue;
+      }
+
+      // Loop through the sizes and quantities in the request
+      for (const size in sizeAndQua) {
+        if (sizeAndQua.hasOwnProperty(size)) {
+          // Update the product's size and quantity
+          if (updateProduct.productDetails[size]) {
+            updateProduct.productDetails[size] += sizeAndQua[size];
+          } else {
+            updateProduct.productDetails[size] = sizeAndQua[size];
+          }
+        }
+      }
+ 
+      // Save the updated product
+      await updateProduct.save();
+    }
+
+    res.status(200).json(updatedOrder); // Corrected response handling
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: 'Internal Server Error' }); // Handle errors gracefully
   }
 };
+
 
 // user order history for admin/seller/user
 const allOrders = async (req, res) => {
