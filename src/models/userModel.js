@@ -79,11 +79,30 @@ const UserSchema = new mongoose.Schema(
       require: false,
       default: false,
     },
+    subscription: {
+      subsStatus: {
+        type: String,
+        default: "inActive",
+        required: false,
+      },
+      startDate: {
+        type: Date,
+        required: false,
+      },
+      expDate: {
+        type: Date,
+        required: false,
+      },
+      payId: {
+        type: String,
+        required: false,
+      },
+    },
   },
   { timestamps: true }
 );
 UserSchema.methods.matchPasswords = async function (password) {
-  console.log(this.password)
+  console.log(this.password);
   return await bcrypt.compare(password, this.password);
 };
 

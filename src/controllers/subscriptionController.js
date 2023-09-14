@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const Subscription = require("../models/Subscription");
 const ErrorResponse = require("../utilis/errorResponse");
 const { ObjectId } = require("mongodb");
-const users = require("../models/userModel");
+const User = require("../models/userModel");
 
 dotenv.config({ path: "../config/.env" });
 
@@ -64,7 +64,7 @@ const subscription = async (req, res) => {
     //  saveUser
 
     // register user
-    const user = new users({
+    const user = new User({
       profilePicture: "sdn",
       name,
       email,
@@ -126,17 +126,18 @@ const subVerification = async (req, res, next) => {
       expDate.setFullYear(expDate.getFullYear() + 1);
 
       // creating user subscription
-      const createSubs = await Subscription.create({
-        userId: new ObjectId(req.query.userId),
-        subsStatus: "active",
-        startDate,
-        expDate,
-        payId: razorpay_payment_id,
+      const createSubs = await User.findByIdAndUpdate(req.query.userId, {
+        subscription: {
+          subsStatus: "active",
+          startDate,
+          expDate,
+          payId: razorpay_payment_id,
+        },
       });
 
       await createSubs.save();
       await payments.save();
-      return res.redirect(`https://hitecmart.in/login`);
+      return res.redirect(`https://hitecmart.com/login`);
     } else {
       return next(new ErrorResponse("Signature dosen't match", 401));
     }
@@ -144,7 +145,5 @@ const subVerification = async (req, res, next) => {
     console.log(error);
   }
 };
-
-
 
 module.exports = { subVerification, subscription, createSubPlan };
