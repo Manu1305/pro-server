@@ -93,7 +93,7 @@ const products = new mongoose.Schema(
         type: String,
       },
       Convertible: {
-        type: Boolean,
+        type: String,
         required: true,
       },
     },
@@ -136,6 +136,12 @@ const products = new mongoose.Schema(
       type: Boolean,
       required: true,
       default: false
+    },
+    tags: {
+      type: String,
+      required: false,
+      default:"Shist"
+      // default: false
     },
   },
 
