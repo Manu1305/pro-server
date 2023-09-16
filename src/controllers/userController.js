@@ -213,7 +213,7 @@ const forgetpassword = async (req, res) => {
       to: email,
       subject: "Hitecmart password change link",
       html: `
-      <img style="width:100px;height:40px;object-fit:contain" src="https://hitecmart.in/Image/loho.jpeg" alt="Your Logo">
+      <img style="width:100px;height:40px;object-fit:contain" src="https://hitecmart.com/Image/loho.jpeg" alt="Your Logo">
         <h2>Click <a style="color:red;" href="${link}">Here</a> to update your password </h2>
       `,
     };
