@@ -1,10 +1,9 @@
 const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
 const Payment = require("../models/Payment");
 const crypto = require("crypto");
-const Subscription = require("../models/Subscription");
 const ErrorResponse = require("../utilis/errorResponse");
-const { ObjectId } = require("mongodb");
 const User = require("../models/userModel");
 
 dotenv.config({ path: "../config/.env" });
@@ -12,7 +11,7 @@ dotenv.config({ path: "../config/.env" });
 // create instance for create plan
 const instance = new Razorpay({
   key_id: process.env.RAZORPAT_API_KEY_ID,
-  key_secret: process.env.RAZORPAT_API_SECRET_KEY,
+  key_secret: process.env.RAZORPAT_API_SECRET_KEY_PROD,
 });
 
 const createSubPlan = async (req, res) => {
@@ -21,10 +20,10 @@ const createSubPlan = async (req, res) => {
       period: "yearly",
       interval: 1,
       item: {
-        name: "Hitech Premium account - daily",
-        amount: 999900,
+        name: "Hitech Premium account",
+        amount: 9999 * 100,
         currency: "INR",
-        description: "Description for the test plan",
+        description: "Premium Subscriber",
       },
       notes: {
         notes_key_1: "Tea, Earl Grey, Hot",
@@ -50,8 +49,8 @@ const subscription = async (req, res) => {
       .create({
         plan_id: process.env.RAZORPAT_PLAN_ID,
         customer_notify: 1,
-        quantity: 5,
-        total_count: 6,
+        quantity: 1,
+        total_count: 1,
         notes: { email },
       })
       .then((res) => {
@@ -61,7 +60,10 @@ const subscription = async (req, res) => {
         console.log(err);
       });
 
-    //  saveUser
+    //  hash password here
+    const salt = await bcrypt.genSaltSync(10);
+    const hashedpassword = bcrypt.hashSync(password, salt);
+
 
     // register user
     const user = new User({
@@ -69,7 +71,7 @@ const subscription = async (req, res) => {
       name,
       email,
       phone,
-      password,
+      password :hashedpassword,
       urType,
       subsPlan: "active",
       shopName,
@@ -89,6 +91,7 @@ const subVerification = async (req, res, next) => {
   const { razorpay_payment_id, razorpay_subscription_id, razorpay_signature } =
     req.body;
 
+
   console.log(
     razorpay_payment_id,
     razorpay_subscription_id,
@@ -101,7 +104,7 @@ const subVerification = async (req, res, next) => {
     const body = razorpay_payment_id + "|" + razorpay_subscription_id;
 
     const generatedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAT_API_SECRET_KEY)
+      .createHmac("sha256", process.env.RAZORPAT_API_SECRET_KEY_PROD)
       .update(body.toString())
       .digest("hex");
 

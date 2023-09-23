@@ -6,6 +6,7 @@ const getAllProduct = async (req, res) => {
   try {
     const allproduct = await Products.find();
     res.status(200).json(allproduct);
+    console.log("sent")
   } catch (error) {
     res.json({ message: error });
   }
@@ -29,17 +30,17 @@ const getOneProduct =async (req, res,next) => {
 // add new Product
 const addNewProduct = async (req, res) => {
 
-
   try {
+    const productInfo = req.body.productInfo;
+    const genInfo = req.body.genInfo
 
+    console.log("Details ", genInfo)
 
-    const product = new Products({ ...req.body, seller: req.user.email });
+    const product = new Products({ ...genInfo, productInfo, seller: req.user.email });
     const ack = await product.save();
-    console.log(ack)
 
-    res.send(ack);
-  } 
-    catch (error) {
+    res.status(200).json(ack);
+  } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
     console.log(error);
@@ -52,6 +53,31 @@ const addNewProduct = async (req, res) => {
 };
 // ----------------Admin access-------------------
 // Requested products from seller and Admin
+
+
+const productColorImages = async (req, res) => {
+
+  console.log(res.files)
+  
+  const qtyAndSizes = JSON.parse(req.body.qtyAndSizes);
+  const color = req.body.color;
+  console.log("req.params.productId",req.params.productId)
+  const images = req.files.map((ele) => ele.location);
+
+
+
+  const product = await Products.findById(req.params.productId);
+
+  product.productDetails.push({
+    qtyAndSizes,
+    color,
+    images
+  })
+
+
+  const ack = product.save()
+  res.status(200).json({ success: true, message: ack })
+}
 
 const requestedProducts = async (req, res) => {
   console.log(req.body.type);
@@ -158,6 +184,18 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+
+
+
+const uploadImages = async (req, res, next) => {
+  const { file } = req;
+
+  console.log(file);
+  if (!file) return next(new ErrorResponse({ message: "Bad request" }, 500))
+
+  return res.status('success')
+}
+
 module.exports = {
   getAllProduct,
   addNewProduct,
@@ -165,5 +203,7 @@ module.exports = {
   allowRequestedProducts,
   removeRequestedProducts,
   updateProduct,
-  getOneProduct
+  getOneProduct,
+  uploadImages,
+  productColorImages,
 };

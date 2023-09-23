@@ -38,7 +38,8 @@ const products = new mongoose.Schema(
     },
     productDetails: {
       type: [productDetail],
-      required: true,
+      // required: true,
+      default:[]
     },
     selectedCategory: {
       type: String,
@@ -93,7 +94,7 @@ const products = new mongoose.Schema(
         type: String,
       },
       Convertible: {
-        type: Boolean,
+        type: String,
         required: true,
       },
     },
@@ -103,7 +104,7 @@ const products = new mongoose.Schema(
     },
     stock: {
       type: Number,
-      required: true,
+      // required: true,
       default: 0,
     },
     numOfReviews: {
@@ -136,6 +137,12 @@ const products = new mongoose.Schema(
       type: Boolean,
       required: true,
       default: false
+    },
+    tags: {
+      type: String,
+      required: false,
+      default:"Shist"
+      // default: false
     },
   },
 

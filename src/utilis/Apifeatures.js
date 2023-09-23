@@ -43,6 +43,7 @@ const Apifeature = ({ Product_find, req_query }) => {
         }
       : {};
     Product_find = Product_find.find({ ...keyword });
+    console.log("Amar Ganndu")
     return Product_find;
   };
 

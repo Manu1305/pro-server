@@ -13,29 +13,17 @@ dotenv.config({ path: "../config/.env" })
 const bcrypt = require("bcrypt");
 
 
-// const getAllUser = async (req, res) => {
-//   try {
-//     const allUser = await Users.find();
-//     res.status(200).json(allUser);
 
-//   } catch (error) {
-//     res.json({ message: error });
-//   }
 
-// };
 const getAllUser = async (req, res) => {
   try {
     const allUser = await Users.find();
     res.status(200).json(allUser);
   } catch (error) {
-    console.error(error); // Log the error for debugging purposes
+    console.error(error); 
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-
-
-
-
 
 const loginApi = async (req, res) => {
   const { email, password } = req.body;
