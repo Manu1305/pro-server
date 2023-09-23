@@ -20,6 +20,7 @@ const {
   addNewProduct,
   removeRequestedProducts,
   updateProduct,
+  getOneProduct,
   productColorImages
 } = require("../controllers/productController");
 
@@ -71,6 +72,7 @@ router.put("/remove-requested-product/:id", removeRequestedProducts);
 
 // update product / increase quantity
 router.put("/update-seller-product/:id", updateProduct);
+router.get("/getOneProduct/:id", getOneProduct);
 
 // router.post("/images", uploadToAWS);
 
