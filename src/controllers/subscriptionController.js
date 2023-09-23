@@ -11,7 +11,7 @@ dotenv.config({ path: "../config/.env" });
 // create instance for create plan
 const instance = new Razorpay({
   key_id: process.env.RAZORPAT_API_KEY_ID,
-  key_secret: process.env.RAZORPAT_API_SECRET_KEY,
+  key_secret: process.env.RAZORPAT_API_SECRET_KEY_PROD,
 });
 
 const createSubPlan = async (req, res) => {
@@ -104,7 +104,7 @@ const subVerification = async (req, res, next) => {
     const body = razorpay_payment_id + "|" + razorpay_subscription_id;
 
     const generatedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAT_API_SECRET_KEY)
+      .createHmac("sha256", process.env.RAZORPAT_API_SECRET_KEY_PROD)
       .update(body.toString())
       .digest("hex");
 

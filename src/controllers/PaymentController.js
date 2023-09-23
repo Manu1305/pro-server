@@ -8,8 +8,8 @@ const { ObjectId } = require("mongodb");
 
 
 const instance = new Razorpay({
-  key_id: process.env.RAZORPAT_API_KEY_ID,
-  key_secret: process.env.RAZORPAT_API_SECRET_KEY,
+  key_id: process.env.RAZORPAT_API_KEY_ID_PROD,
+  key_secret: process.env.RAZORPAT_API_SECRET_KEY_PROD,
 });
 
 
@@ -53,7 +53,7 @@ const paymentVerification = async (req, res, next) => {
     const body = razorpay_order_id + "|" + razorpay_payment_id;
 
     const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAT_API_SECRET_KEY)
+      .createHmac("sha256", process.env.RAZORPAT_API_SECRET_KEY_PROD)
       .update(body.toString())
       .digest("hex");
 

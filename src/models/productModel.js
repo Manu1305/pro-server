@@ -38,7 +38,8 @@ const products = new mongoose.Schema(
     },
     productDetails: {
       type: [productDetail],
-      required: true,
+      // required: true,
+      default:[]
     },
     selectedCategory: {
       type: String,
@@ -103,7 +104,7 @@ const products = new mongoose.Schema(
     },
     stock: {
       type: Number,
-      required: true,
+      // required: true,
       default: 0,
     },
     numOfReviews: {

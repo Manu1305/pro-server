@@ -3,11 +3,10 @@ const Razorpay = require("razorpay");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./src/config/.env" });
 
-let refundeceiptNumber = 0;
 
 const instance = new Razorpay({
-  key_id: process.env.RAZORPAT_API_KEY_ID,
-  key_secret: process.env.RAZORPAT_API_SECRET_KEY,
+  key_id: process.env.RAZORPAT_API_KEY_ID_PROD,
+  key_secret: process.env.RAZORPAT_API_SECRET_KEY_PROD,
 });
 
 // Normal method                     ------- refund
