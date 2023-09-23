@@ -20,8 +20,6 @@ const connectDB = () => {
     db.once("open", () => {
       console.log("Database connected successfully");
     });
-
-    // console.log(db.collections)
   } catch (error) {
     console.log(error);
   }

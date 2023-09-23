@@ -9,7 +9,7 @@ const dotenv = require("dotenv");
 const multerS3 = require('multer-s3')
 dotenv.config({ path: "../config/env" });
 
-const uploadToAWS = require("../cloud/S3");
+// const uploadToAWS = require("../cloud/S3");
 
 
 
@@ -22,7 +22,6 @@ const {
   updateProduct,
   productColorImages
 } = require("../controllers/productController");
-const uploadThroughMulter = require("../cloud/S3");
 
 
 
@@ -58,17 +57,6 @@ const upload = multer({
 });
 
 
-
-
-
-
-// router.post("/add-new-product", authMiddleware,upload.array('images'), addNewProduct);
-
-// UPLOADING++++++++++
-// router.post("/add-new-product", upload.array('images'), (req, res) => {
-//   console.log("UPloaded Files ", req.files)
-// });
-
 router.post("/add-new-product", authMiddleware, addNewProduct);
 router.put("/product_color_images/:productId", authMiddleware, upload.array('images', 4), productColorImages);
 
@@ -84,7 +72,7 @@ router.put("/remove-requested-product/:id", removeRequestedProducts);
 // update product / increase quantity
 router.put("/update-seller-product/:id", updateProduct);
 
-router.post("/images", uploadToAWS);
+// router.post("/images", uploadToAWS);
 
 
 
