@@ -34,10 +34,8 @@ app.use(express.json());
 
 // cors policy
 
-const corsOptions = {
-  origin: 'https://hitecmart.com',
-};
-app.use(cors(corsOptions));
+
+app.use(cors());
 
 
 
