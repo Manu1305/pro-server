@@ -33,15 +33,21 @@ app.use(bodyParser.urlencoded({  extended: true }));
 app.use(express.json());
 
 // cors policy
-app.use(
-  cors({
-    permissionsPolicy: {
-      features: {
-        chUaFormFactor: false,
-      },
-    },
-  })
-);
+// app.use(
+//   cors({
+//     permissionsPolicy: {
+//       features: {
+//         chUaFormFactor: false,
+//       },
+//     },
+//   })
+// );
+
+app.use(function (request, response, next) {
+  response.header("Access-Control-Allow-Origin", "*");
+  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 // routes
 app.use("/user", userRouter);
