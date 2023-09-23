@@ -1,5 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../Middlewares/authuser");
+
 const router = express.Router();
 const {
   addToCart,

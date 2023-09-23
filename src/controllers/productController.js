@@ -1,5 +1,6 @@
 const Notification = require("../models/Notifications");
 const Products = require("../models/productModel");
+const ErrorResponse = require("../utilis/errorResponse");
 
 const getAllProduct = async (req, res) => {
   try {
@@ -9,6 +10,21 @@ const getAllProduct = async (req, res) => {
     res.json({ message: error });
   }
 };
+
+const getOneProduct =async (req, res,next) => {
+
+  const productId =req.params.id
+
+  try{
+    const getOneproduct = await Products.findById(productId);
+
+    if(!getOneproduct) next(new ErrorResponse({suucess:false ,messgae:"Product not found"},404))
+
+    res.status(200).json(getOneproduct);
+  }
+  catch (error) { console.log(error+'fetching one product error ')
+}
+}
 
 // add new Product
 const addNewProduct = async (req, res) => {
@@ -22,7 +38,8 @@ const addNewProduct = async (req, res) => {
     console.log(ack)
 
     res.send(ack);
-  } catch (error) {
+  } 
+    catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
     console.log(error);
@@ -148,4 +165,5 @@ module.exports = {
   allowRequestedProducts,
   removeRequestedProducts,
   updateProduct,
+  getOneProduct
 };
