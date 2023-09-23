@@ -27,7 +27,7 @@ const app = express();
 
 // setting limit
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true }));
+app.use(bodyParser.urlencoded({  extended: true }));
 
 // to read data in json format
 app.use(express.json());
