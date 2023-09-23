@@ -26,13 +26,22 @@ const PORT = process.env.PORT;
 const app = express();
 
 // setting limit
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({  extended: true }));
 
 // to read data in json format
 app.use(express.json());
 
 // cors policy
+// app.use(
+//   cors({
+//     permissionsPolicy: {
+//       features: {
+//         chUaFormFactor: false,
+//       },
+//     },
+//   })
+// );
 
 
 app.use(cors());
