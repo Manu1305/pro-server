@@ -2,14 +2,12 @@ const BankData = require("../models/Bankdetails");
 const users = require("../models/userModel");
 
 const addBankdetails = async (req, res) => {
-  // console.log("ADDRESS",req.user.id);
 
   console.log(req.body)
   
   const BankDatas = new BankData({ userId: req.user.email, ...req.body });
   try {
-    // const findUser = await Address.find({ userId: req.user.id });
-    // console.log(findUser);
+    
     const findUser = await users.findByIdAndUpdate(req.user.id, {
       storeSetup: true,
     });
