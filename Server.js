@@ -27,19 +27,21 @@ const app = express();
 
 // setting limit
 app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.urlencoded({  extended: true }));
 
 // to read data in json format
 app.use(express.json());
 
 // cors policy
-const corsOptions = {
-  origin: 'https://hitecmart.com', // Change this to the actual origin of your web app
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    permissionsPolicy: {
+      features: {
+        chUaFormFactor: false,
+      },
+    },
+  })
+);
 
 // routes
 app.use("/user", userRouter);
