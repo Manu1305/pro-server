@@ -33,15 +33,11 @@ app.use(bodyParser.urlencoded({  extended: true }));
 app.use(express.json());
 
 // cors policy
-app.use(
-  cors({
-    permissionsPolicy: {
-      features: {
-        chUaFormFactor: false,
-      },
-    },
-  })
-);
+
+const corsOptions = {
+  origin: 'https://hitecmart.com',
+};
+app.use(cors(corsOptions));
 
 
 
