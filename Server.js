@@ -33,15 +33,13 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
 
 // cors policy
-app.use(
-  cors({
-    permissionsPolicy: {
-      features: {
-        chUaFormFactor: false,
-      },
-    },
-  })
-);
+const corsOptions = {
+  origin: 'https://hitecmart.com', // Change this to the actual origin of your web app
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // routes
 app.use("/user", userRouter);
