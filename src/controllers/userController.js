@@ -61,7 +61,7 @@ const signUpApi = async (req, res) => {
   }
 
   try {
-
+    // 
     if (userData.urType === "seller") {
       const startDate = new Date();
       const expDate = new Date();
@@ -103,7 +103,6 @@ const signUpApi = async (req, res) => {
 
       return res.status(200).json({ register: ack, subscription: saveSub });
     } else {
-      // if buyer
       const { name, email, phone, password, gst, urType } = userData;
       const salt = await bcrypt.genSaltSync(10);
       const hashedpassword = bcrypt.hashSync(password, salt);
