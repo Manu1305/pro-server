@@ -12,6 +12,7 @@ const addToWish =  async (req, res) => {
         productId,
       });
 
+    
 
       
       if (existingWishlistItem) {
