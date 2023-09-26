@@ -19,7 +19,9 @@ const {
   updateProfile,
   sendOTP,
   verifyOtp,
-  allUsers
+  allUsers,
+  userDeactivate,
+  userActivate
 } = require("../controllers/userController");
 
 // login api
@@ -49,5 +51,7 @@ router.get("/allUserData", getAllUser);
 router.post("/send-otp", sendOTP);
 router.post("/verify-otp", verifyOtp);
  
+router.patch("/deactivate-activate-user/:id", userDeactivate);
+// router.patch("/activate-user", userActivate);
 
 module.exports = router;

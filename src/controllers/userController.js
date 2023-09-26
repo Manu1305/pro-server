@@ -322,6 +322,57 @@ const verifyOtp = async function (req, res) {
     });
 }
 
+const userDeactivate = async (req, res) => {
+  console.log(req.params.id);
+  try {
+    if (!req.params.id) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    const updateUser = await Users.findByIdAndUpdate(req.params.id, {
+      status:!req.body.actStatus
+    });
+
+    console.log(updateUser);
+
+    res.status(201).json({ success: true, ack: updateUser });
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(500).send({ code: error.code, errorMessage });
+      return;
+    }
+  }
+};
+
+const userActivate = async (req, res) => {
+  console.log(req.params.id);
+  try {
+    if (!req.params.id) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    const updateUser = await Users.findByIdAndUpdate(req.params.id, {
+      status: true,
+    });
+
+    console.log(updateUser);
+
+    res.status(201).json({ success: true, ack: "success" });
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(500).send({ code: error.code, errorMessage });
+      return;
+    }
+  }
+};
+
+
+
+
+
+
+
+
 module.exports = {
   loginApi,
   signUpApi,
@@ -331,6 +382,8 @@ module.exports = {
   updateProfile,
   getAllUser,
   sendOTP,
-  verifyOtp
+  verifyOtp,
+  userDeactivate,
+  userActivate
 
 };
