@@ -72,10 +72,7 @@ router.put("/remove-requested-product/:id", removeRequestedProducts);
 
 // update product / increase quantity
 router.put("/update-seller-product/:id", updateProduct);
-router.get("/getOneProduct/:id", getOneProduct);
-
-// router.post("/images", uploadToAWS);
-
+router.get("/get-single-products/:id", getOneProduct);
 
 
 module.exports = router;
