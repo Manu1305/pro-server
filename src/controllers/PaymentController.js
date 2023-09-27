@@ -89,14 +89,9 @@ const paymentVerification = async (req, res, next) => {
       });
 
       await payments.save();
-      const protocol = req.protocol;
-      const host = req.hostname;
-      const PORT = process.env.PORT
-      
+       
 
       const deletePendingOrders =await Order.deleteMany({orderStatus:"Pending"})
-
-
       return res.redirect(
         `https://hitecmart.com/payment_succesfull?reference=${razorpay_payment_id}`
       );
@@ -112,7 +107,7 @@ const paymentVerification = async (req, res, next) => {
 
 
 const getApiKey = async (req, res) =>
-  res.status(200).json({ key: process.env.RAZORPAT_API_KEY_ID });
+  res.status(200).json({ key: process.env.RAZORPAT_API_KEY_ID_PROD });
 
 // refund checkout
 const refundCheckout = async (req, res) => {
