@@ -10,7 +10,7 @@ dotenv.config({ path: "../config/.env" });
 
 // create instance for create plan
 const instance = new Razorpay({
-  key_id: process.env.RAZORPAT_API_KEY_ID,
+  key_id: process.env.RAZORPAT_API_KEY_ID_PROD,
   key_secret: process.env.RAZORPAT_API_SECRET_KEY_PROD,
 });
 
@@ -47,7 +47,7 @@ const subscription = async (req, res) => {
     // razorpay
     const razAck = await instance.subscriptions
       .create({
-        plan_id: process.env.RAZORPAT_PLAN_ID,
+        plan_id: process.env.RAZORPAT_PLAN_ID_PROD,
         customer_notify: 1,
         quantity: 1,
         total_count: 1,
@@ -71,9 +71,9 @@ const subscription = async (req, res) => {
       name,
       email,
       phone,
-      password :hashedpassword,
+      password: hashedpassword,
       urType,
-      subsPlan: "active",
+      subsPlan: "Pending",
       shopName,
       gst,
       address,
@@ -83,7 +83,15 @@ const subscription = async (req, res) => {
 
     res.status(200).json({ razAck, userAck });
   } catch (error) {
-    console.log(error);
+    console.log("EROOR",error);
+
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    if (error.code === 11000) {
+      res.status(500).json({ code: errorCode, errorMessage });
+      return;
+    }
+    res.status(500).json({ error });
   }
 };
 
@@ -145,7 +153,7 @@ const subVerification = async (req, res, next) => {
       return next(new ErrorResponse("Signature dosen't match", 401));
     }
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ error });
   }
 };
 

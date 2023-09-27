@@ -124,10 +124,10 @@ const signUpApi = async (req, res) => {
     const errorCode = error.code;
     const errorMessage = error.message;
     if (error.code === 11000) {
-      res.status(500).send({ code: errorCode, errorMessage });
+      res.status(500).json({ code: errorCode, errorMessage });
       return;
     }
-    res.status(500).send({ error });
+    res.status(500).json({ error });
   }
 };
 
