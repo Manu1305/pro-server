@@ -47,7 +47,7 @@ const addNewProduct = async (req, res) => {
     if (error.code === 11000) {
       res.status(500).send({ code: errorCode, errorMessage });
       return;
-    }
+    } 
     res.status(500).send({ code: errorCode, errorMessage });
   }
 };
