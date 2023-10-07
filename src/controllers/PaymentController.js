@@ -5,6 +5,7 @@ dotenv.config({ path: "./src/config/.env" });
 const Payment = require("../models/Payment");
 const Order = require("../models/Order");
 const { ObjectId } = require("mongodb");
+const Cart = require("../models/Cart");
 
 
 const instance = new Razorpay({
@@ -59,9 +60,19 @@ const paymentVerification = async (req, res, next) => {
 
     const isAuth = expectedSignature === razorpay_signature;
     if (isAuth) {
-      // update placed order
 
+
+      // update placed order
       let ids = req.params.ids.split(",").map((id) => new ObjectId(id));
+
+
+      let getUserCart = await Cart.findOne({ userId: id[0].userId });
+
+      getUserCart[0].items = [];
+
+      await getUserCart.save
+
+
 
       const orderPromises = ids.map(async (element) => {
         const updatePlacedOrder = await Order.findByIdAndUpdate(
@@ -78,8 +89,10 @@ const paymentVerification = async (req, res, next) => {
         );
         return await updatePlacedOrder.save();
       });
-      // console.log(updatePlacedOrder);
+
       const allUpdatedOrds = await Promise.all(orderPromises);
+
+
       // store razorpay payment Details
       const payments = await Payment.create({
         razorpay_payment_id,
@@ -89,15 +102,15 @@ const paymentVerification = async (req, res, next) => {
       });
 
       await payments.save();
-       
 
-      const deletePendingOrders =await Order.deleteMany({orderStatus:"Pending"})
+
+      await Order.deleteMany({ orderStatus: "Pending" })
       return res.redirect(
         `https://hitecmart.com/payment_succesfull?reference=${razorpay_payment_id}`
       );
     } else {
       console.log("Please try agin");
-      return res.status(400).json({ success: false });
+      return res.status(400).json({ success: false, message: "Please try again" });
     }
     // res.status(200).json({ success: true });
   } catch (error) {
