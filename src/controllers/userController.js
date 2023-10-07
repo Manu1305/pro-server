@@ -11,6 +11,9 @@ const verifySid = "VAa8e71f48525eb30c8d34654c6eeb1d4e";
 const client = require("twilio")(accountSid, authToken);
 dotenv.config({ path: "../config/.env" })
 const bcrypt = require("bcrypt");
+var unirest = require("unirest");
+
+var req = unirest("GET", "https://www.fast2sms.com/dev/bulkV2");
 
 
 
@@ -281,45 +284,57 @@ async function sendToken(user, statusCode, res) {
   });
 }
 
-//
-const sendOTP = async (req, res) => {
-  console.log(req.body + "this is req.body")
-  const phone = '+91' + req.body.phone;
 
-  client.verify.v2.services
-    .create({ friendlyName: 'hitecmart login' })
-    .then(service => console.log(service.sid))
+req.query({
+  "authorization": "YOUR_API_KEY",
+ 
+  "variables_values": "12345|asdaswdx",
+  "route": "dlt",
+  "numbers": "9999999999,8888888888,7777777777",
+});
 
-  client.verify.v2
-    .services(verifySid)
-    .verifications.create({ to: phone, channel: "sms" })
-    .then((verification) => console.log(verification.status))
-    .then(() => {
+var otp = Math.random();
+otp = otp * 1000000;
+otp = parseInt(otp);
 
-    });
+const sendOTP = async (data, res) => {
+
+  console.log(data.body + "this is req.body")
+  const phone = data.body.phone;
+  req.query({
+    "authorization": "BLHFvewrGpNhE56Wj1Y0z4qUAmnPt3VlaMQsSo2kJRdcgCTZDfu2zZ6g0rNfVT4KCcR1lODpBLwUHW7v",
+    "sender_id": "HTCMRT",
+    "message": 159934,
+    "variables_values": `hitecmart|${otp}`,
+    "route": "dlt",
+    "numbers": phone,
+  });
+  
+  req.headers({
+    "cache-control": "no-cache"
+  });
+  
+  
+  req.end(function (res) {
+    if (res.error) throw new Error(res.error);
+  
+    console.log(res.body);
+  });
+
 }
-
 
 const verifyOtp = async function (req, res) {
 
-  const otpCode = req.body.phoneOtp;
-  const phone = '+91' + req.body.phone;
-
-
-  console.log("otpCode", otpCode);
-  console.log("phone", phone);
-  client.verify
-    .services(verifySid)
-    .verificationChecks.create({ to: phone, code: otpCode })
-    .then((verification_check) => {
-      console.log(verification_check.status);
-      res.json({ status: verification_check.status });
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ error: 'Verification failed' });
-    });
+if(req.body.phoneOtp==otp){
+  res.send({ message: "success" });
+  console.log('varified')
 }
+else{
+  res.send({ message: "failed" });
+  console.log("wron otp")
+}
+}
+
 
 const userDeactivate = async (req, res) => {
   console.log(req.params.id);
