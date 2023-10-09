@@ -18,7 +18,8 @@ const instance = new Razorpay({
 // order creation
 const checkout = async (req, res, next) => {
   const options = {
-    amount: Number(req.body.amount * 100),
+    // amount: Number(req.body.amount * 100),
+    amount: Number(1 * 100),
     currency: "INR",
   };
   try {
@@ -67,11 +68,11 @@ const paymentVerification = async (req, res, next) => {
       let ids = req.params.ids.split(",").map((id) => new ObjectId(id));
 
 
-      let getUserCart = await Cart.findOne({ userId: id[0].userId });
+      // let getUserCart = await Cart.findOne({ userId: id[0].userId });
 
-      getUserCart[0].items = [];
+      // getUserCart[0].items = [];
 
-      await getUserCart.save
+      // await getUserCart.save
 
 
 
