@@ -77,10 +77,6 @@ const removeRequestedReturn = async (req, res) => {
   }
 };
 
-
-
-
-
 module.exports = {
   ReturnProd, getAllReturn, removeRequestedReturn
 };
