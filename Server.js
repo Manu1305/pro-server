@@ -17,10 +17,10 @@ const updateWishlistRouter = require("./src/routes/wishRoutes");
 const sellerRouter = require("./src/routes/sellerRouter");
 const subsRouter = require("./src/routes/subRoute");
 const notifRouter = require("./src/routes/notiRoute");
+
 const connectDB = require("./src/config/db");
 
 dotenv.config({ path: "./src/config/.env" });
-
 const PORT = process.env.PORT;
 
 const app = express();
@@ -47,7 +47,6 @@ app.use(express.json());
 app.use(cors());
 
 
-
 // routes
 app.use("/user", userRouter);
 app.use("/product", productRouter);
@@ -64,6 +63,10 @@ app.use("/return", ReturnOrder);
 app.use("/seller", sellerRouter);
 app.use("/subscription", subsRouter);
 app.use("/noti", notifRouter);
+
+
+
+
 
 const server = app.listen(PORT, () => {
   // db connection

@@ -31,7 +31,7 @@ const authMiddleware = async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    return next(new ErrorResponse("Not Authorized to access this route", 401));
+    return res.redirect('https://hitecmart.com/login');
   }
 };
 

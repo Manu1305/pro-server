@@ -5,8 +5,8 @@ dotenv.config({ path: "./src/config/.env" });
 
 
 const instance = new Razorpay({
-  key_id: process.env.RAZORPAT_API_KEY_ID_PROD,
-  key_secret: process.env.RAZORPAT_API_SECRET_KEY_PROD,
+  key_id: process.env.RAZORPAT_API_KEY_ID,
+  key_secret: process.env.RAZORPAT_API_SECRET_KEY,
 });
 
 // Normal method                     ------- refund
