@@ -214,12 +214,30 @@ const allOrders = async (req, res) => {
     }
 
 
+    const filterdOrders = orders.filter(ele => ele.orderStatus !== "Pending");
 
-    res.status(200).json(orders);
+
+    res.status(200).json(filterdOrders);
   } catch (error) {
     console.log(error);
   }
 };
 
+const singleOrder = async (req,res,next)=>{
+const orderId =req.params.id
 
-module.exports = { createOrder, updateOrder, allOrders };
+try{
+  const getOneOrder =await Order.findById(orderId)
+  if(!getOneOrder) next(new ErrorResponse({success:false ,messgae:"order Not found"},404))
+  res.status(200).json(getOneOrder);
+}
+catch (error) { console.log(error+'fetching one product error ')
+}
+}
+
+
+
+
+
+
+module.exports = { createOrder, updateOrder, allOrders,singleOrder };

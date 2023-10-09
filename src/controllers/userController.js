@@ -90,6 +90,7 @@ const signUpApi = async (req, res) => {
         gst,
         address,
       });
+    
 
       let ack = await user.save();
       console.log("ack", ack);
@@ -109,6 +110,7 @@ const signUpApi = async (req, res) => {
       const { name, email, phone, password, gst, urType } = userData;
       const salt = await bcrypt.genSaltSync(10);
       const hashedpassword = bcrypt.hashSync(password, salt);
+      var mails=userData.email
       const user = new Users({
         profilePicture: "bsdmbn",
         name,
@@ -119,8 +121,68 @@ const signUpApi = async (req, res) => {
         gst,
         subsPlan: "Not Applicable",
       });
+
+
+
+
+      //welcome Email mesage
+      let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "hitecmart303@gmail.com",
+          pass: "kvlflizslfiuxzse",
+        },
+      });
+    
+      try {
+       
+    
+        const payload = { email: email};
+    
+        // creating token with expiration
+       
+       
+        
+        // send mail using optional parameters
+        var mailOptions = {
+          from: "manukrishnan858@gmail.com",
+          to: mails,
+          subject: "Welcome to hitecmart",
+          html: `
+          
+            <h2>Click>welcome to hitecmart ,your account created successfully</h2>
+          `,
+        };
+    
+        // get the response
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+    
+            return res.status(200).json({ success: true, message: info.response });
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+      
       let ack = await user.save();
       return res.send({ message: "success" });
+
+      
+      
+     
+
+
+
+
+
+
+
     }
   } catch (error) {
     console.log(error);
