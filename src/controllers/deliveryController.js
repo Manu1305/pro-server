@@ -31,29 +31,6 @@ const assignDelivery = async (req, res) => {
   }
 };
 
-// delivery dashbaord details
-// const dashboradDlvData = async (req, res) => {
-//   try {
-//     const allorder = await Order.find({ isAssignDlv: true });
-
-//     let products = allorder.map((order) => {
-//       return order.products;
-//     });
-
-//     let flaternData = [].concat(...products);
-//     const user2 = await User.find();
-
-//     const seller = allorder.map((seller) => seller.seller);
-
-//     const sellerAddress = seller.flatMap((email) =>
-//       user2.filter((user) => user.email === email)
-//     );
-
-//     res.status(200).json({ allorder, seller: sellerAddress });
-//   } catch (error) {
-//     res.json({ message: error });
-//   }
-// };
 const dashboradDlvData = async (req, res) => {
   try {
     const allorder = await Order.find({ isAssignDlv: true });
@@ -62,6 +39,8 @@ const dashboradDlvData = async (req, res) => {
     res.json({ message: error });
   }
 };
+
+
 // picked from seller
 const orderPicked = async (req, res, next) => {
   try {
@@ -290,11 +269,9 @@ const AdminReturnConfirmation = async (req, res, next) => {
   }
 };
 
-
 const allRefunds = async (req, res) => {
   const refunda = await instance.refunds.all(options);
 };
-
 
 //uploading TrackingID
 const updateTrackId = async (req, res) => {
@@ -358,6 +335,8 @@ const createExpDate = () => {
   }
   return threeDaysFromNow;
 };
+
+
 module.exports = {
   dashboradDlvData,
   assignDelivery,
