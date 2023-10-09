@@ -24,7 +24,6 @@ router.get("/get-all-orders",authMiddleware,allOrders);
 // router.get('/admin-orders',authMiddleware,getAdminOrders)
 
 //get order details
-
 router.get("/getSingleorder/:id",authMiddleware,singleOrder);
 
 module.exports = router;
