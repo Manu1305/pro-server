@@ -14,7 +14,8 @@ const {
   AdminReturnConfirmation,
   assignReturnDelivery,
   updateTrackId,
-  PckgDetail
+  PckgDetail,
+  updateOrdStatus
 } = require("../controllers/deliveryController");
 const authMiddleware = require("../Middlewares/authuser");
 
@@ -33,6 +34,7 @@ router.put("/assign-return-delivery-order/:id", assignReturnDelivery);
 router.put("/return-order-shipped/:id", returnOrderPicked);
 router.put("/return-order-delivery/:id", returnConfirmation);
 router.put("/return-Sucess/:id", authMiddleware, AdminReturnConfirmation);
+router.post('/update-order-status/:id',authMiddleware,updateOrdStatus)
 
 
 
