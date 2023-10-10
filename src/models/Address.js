@@ -7,6 +7,10 @@ const AddressScema = new mongoose.Schema(
       required: true,
     },
     addressDetails: {
+      name: {
+        type: String,
+        required: false,
+      },
       locality: {
         type: String,
         required: false,

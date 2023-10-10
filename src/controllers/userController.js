@@ -215,7 +215,6 @@ const updateUser = async (req, res) => {
     allowedUpdates.includes(update)
   );
 
-
   if (!isValidOperation) {
     return res.status(400).send({ error: "Invalids updates!" });
   }
