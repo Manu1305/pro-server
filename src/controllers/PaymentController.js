@@ -19,6 +19,8 @@ const instance = new Razorpay({
 const checkout = async (req, res, next) => {
   const options = {
     amount: Number(req.body.amount) * 100,
+    // amount: 1*100,
+
     currency: "INR",
   };
   try {
@@ -67,13 +69,8 @@ const paymentVerification = async (req, res, next) => {
       let ids = req.params.ids.split(",").map((id) => new ObjectId(id));
 
 
-      // let getUserCart = await Cart.findOne({ userId: id[0].userId });
 
-      // getUserCart[0].items = [];
-
-      // await getUserCart.save
-
-
+      let userId;
 
       const orderPromises = ids.map(async (element) => {
         const updatePlacedOrder = await Order.findByIdAndUpdate(
@@ -88,6 +85,8 @@ const paymentVerification = async (req, res, next) => {
 
           { new: true }
         );
+        userId = updatePlacedOrder.userId;
+
         return await updatePlacedOrder.save();
       });
 
@@ -105,7 +104,13 @@ const paymentVerification = async (req, res, next) => {
       await payments.save();
 
 
-      await Order.deleteMany({ orderStatus: "Pending" })
+      await Order.deleteMany({ orderStatus: "Pending" });
+
+
+      await Cart.findOneAndDelete({userId})
+
+
+
       return res.redirect(
         `https://hitecmart.com/payment_succesfull?reference=${razorpay_payment_id}`
       );

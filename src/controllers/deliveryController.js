@@ -337,6 +337,30 @@ const createExpDate = () => {
 };
 
 
+// only admin ==> update oreder status 
+const updateOrdStatus = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res.status(401).json({ error: "Order Request not found" });
+    }
+
+    const updateStatus = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        orderStatus: req.body.orderStatus,
+      },
+      { new: true }
+    );
+
+    res.status(201).json({ success: true, ack: updateStatus });
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(500).send({ code: error.code, errorMessage });
+      return;
+    }
+  }
+};
+
 module.exports = {
   dashboradDlvData,
   assignDelivery,
@@ -349,4 +373,5 @@ module.exports = {
   AdminReturnConfirmation,
   updateTrackId,
   PckgDetail,
+  updateOrdStatus
 };
