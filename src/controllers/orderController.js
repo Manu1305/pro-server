@@ -56,7 +56,7 @@ const createOrder = async (req, res) => {
         seller: element.productDetails.seller,
         ordPrc: element.itemPrice,
         isAssignDlv: false,
-        quantity: 0,
+        quantity: element.totalQuantity,
         raz_paymentId: "",
         raz_orderId: "",
         orderStatus: "Pending",
@@ -68,6 +68,9 @@ const createOrder = async (req, res) => {
           name: sellerAdd[0].name,
         },
         trackId: null,
+        paymentDetails: {
+          
+        },
 
         pType: "",
 
@@ -186,7 +189,7 @@ const updateOrder = async (req, res) => {
           }
         }
       }
- 
+
       // Save the updated product
       await updateProduct.save();
     }
@@ -206,11 +209,11 @@ const allOrders = async (req, res) => {
 
     let orders;
     if (req.user.urType === "admin") {
-      orders = await Order.find();
+      orders = await Order.find().sort({ _id: -1 });
     } else if (req.user.urType === "seller") {
-      orders = await Order.find({ seller: req.user.email });
+      orders = await Order.find({ seller: req.user.email }).sort({ _id: -1 });
     } else {
-      orders = await Order.find({ userId: req.user.id });
+      orders = await Order.find({ userId: req.user.id }).sort({ _id: -1 });
     }
 
 
@@ -223,21 +226,22 @@ const allOrders = async (req, res) => {
   }
 };
 
-const singleOrder = async (req,res,next)=>{
-const orderId =req.params.id
+const singleOrder = async (req, res, next) => {
+  const orderId = req.params.id
 
-try{
-  const getOneOrder =await Order.findById(orderId)
-  if(!getOneOrder) next(new ErrorResponse({success:false ,messgae:"order Not found"},404))
-  res.status(200).json(getOneOrder);
+  try {
+    const getOneOrder = await Order.findById(orderId)
+    if (!getOneOrder) next(new ErrorResponse({ success: false, messgae: "order Not found" }, 404))
+    res.status(200).json(getOneOrder);
+  }
+  catch (error) {
+    console.log(error + 'fetching one product error ')
+  }
 }
-catch (error) { console.log(error+'fetching one product error ')
-}
-}
 
 
 
 
 
 
-module.exports = { createOrder, updateOrder, allOrders,singleOrder };
+module.exports = { createOrder, updateOrder, allOrders, singleOrder };

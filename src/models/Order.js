@@ -74,6 +74,10 @@ const Order = new mongoose.Schema(
       type: Object,
       required: false,
     },
+    paymentDetails: {
+      type: Object,
+      required: false,
+    },
   },
   { timestamps: true }
 );
