@@ -11,6 +11,7 @@ console.log(JWT_SECRETE);
 const authMiddleware = require("../Middlewares/authuser");
 const {
   getAllUser,
+  getSingleUser,
   loginApi,
   signUpApi,
   updateUser,
@@ -21,7 +22,8 @@ const {
   verifyOtp,
   allUsers,
   userDeactivate,
-  userActivate
+  userActivate,
+  
 } = require("../controllers/userController");
 
 // login api
@@ -46,6 +48,7 @@ router.put("/updatePassword", updatePassword);
 
 // get all users     ------Admin
 router.get("/allUserData", getAllUser);
+router.get("/singleUserData/:id",authMiddleware, getSingleUser);
 
 
 router.post("/send-otp", sendOTP);
