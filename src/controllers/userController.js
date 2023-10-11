@@ -28,6 +28,18 @@ const getAllUser = async (req, res) => {
   }
 };
 
+const getSingleUser = async (req, res) => {
+ const  emailid=req.params.id
+  try {
+    const User = await Users.findOne({email:emailid});
+
+    res.status(200).json(User);
+  } catch (error) {
+    console.error(error); 
+    res.status(500).json({ error });
+  }
+};
+
 const loginApi = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -214,7 +226,6 @@ const updateUser = async (req, res) => {
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
-
 
   if (!isValidOperation) {
     return res.status(400).send({ error: "Invalids updates!" });
@@ -455,6 +466,7 @@ module.exports = {
   sendOTP,
   verifyOtp,
   userDeactivate,
-  userActivate
+  userActivate,
+  getSingleUser
 
 };
