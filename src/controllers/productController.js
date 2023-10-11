@@ -4,7 +4,7 @@ const ErrorResponse = require("../utilis/errorResponse");
 
 const getAllProduct = async (req, res) => {
   try {
-    const allproduct = await Products.find();
+    const allproduct = await Products.find().sort({ _id: -1 });
     res.status(200).json(allproduct);
     console.log("sent")
   } catch (error) {
