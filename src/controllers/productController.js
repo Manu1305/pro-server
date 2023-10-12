@@ -70,8 +70,6 @@ const productColorImages = async (req, res) => {
 
   const quantites = Object.values(qtyAndSizes);
 
-
-
   product.productDetails.push({
     qtyAndSizes,
     color,
