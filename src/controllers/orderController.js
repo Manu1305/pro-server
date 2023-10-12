@@ -113,11 +113,6 @@ const createOrder = async (req, res) => {
       // console.log("updateColorQua", updateColorQua)
       updateOreders.productDetails[index] = updateColorQua
       await updateOreders.save()
-
-
-
-
-
     });
 
 
@@ -137,21 +132,7 @@ const createOrder = async (req, res) => {
 
 // UPDATE => only admin can update
 
-// const updateOrder = async (req, res) => {
-//   try {
-//     const updatedOrder = await Order.findByIdAndUpdate(
-//       req.params.id,
-//       {
-//         orderStatus:"Cancelled",
-//       },
-//       { new: true }
-//     );
 
-//     res.json(200).status(updatedOrder);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 const updateOrder = async (req, res) => {
   const { products } = req.body;
 

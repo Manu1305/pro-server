@@ -12,19 +12,20 @@ const getAllProduct = async (req, res) => {
   }
 };
 
-const getOneProduct =async (req, res,next) => {
+const getOneProduct = async (req, res, next) => {
 
-  const productId =req.params.id
+  const productId = req.params.id
 
-  try{
+  try {
     const getOneproduct = await Products.findById(productId);
 
-    if(!getOneproduct) next(new ErrorResponse({suucess:false ,messgae:"Product not found"},404))
+    if (!getOneproduct) next(new ErrorResponse({ suucess: false, messgae: "Product not found" }, 404))
 
     res.status(200).json(getOneproduct);
   }
-  catch (error) { console.log(error+'fetching one product error ')
-}
+  catch (error) {
+    console.log(error + 'fetching one product error ')
+  }
 }
 
 // add new Product
@@ -47,7 +48,7 @@ const addNewProduct = async (req, res) => {
     if (error.code === 11000) {
       res.status(500).send({ code: errorCode, errorMessage });
       return;
-    } 
+    }
     res.status(500).send({ code: errorCode, errorMessage });
   }
 };
@@ -58,22 +59,27 @@ const addNewProduct = async (req, res) => {
 const productColorImages = async (req, res) => {
 
   console.log(res.files)
-  
+
   const qtyAndSizes = JSON.parse(req.body.qtyAndSizes);
   const color = req.body.color;
-  console.log("req.params.productId",req.params.productId)
   const images = req.files.map((ele) => ele.location);
 
 
 
   const product = await Products.findById(req.params.productId);
 
+  const quantites = Object.values(qtyAndSizes);
+
+
+
   product.productDetails.push({
     qtyAndSizes,
     color,
     images
-  })
+  });
 
+  // adding stocks
+  product.stock = product.stock + quantites.reduce(function (a, b) { return a + b; }, 0);
 
   const ack = product.save()
   res.status(200).json({ success: true, message: ack })
@@ -183,8 +189,6 @@ const updateProduct = async (req, res, next) => {
     return next(new ErrorResponse(error, 500));
   }
 };
-
-
 
 
 const uploadImages = async (req, res, next) => {
