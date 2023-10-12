@@ -111,7 +111,9 @@ const createOrder = async (req, res) => {
       };
       // console.log("index", index)
       // console.log("updateColorQua", updateColorQua)
-      updateOreders.productDetails[index] = updateColorQua
+      updateOreders.productDetails[index] = updateColorQua;
+      const quantites = Object.values(sizeAndQua);
+      updateOreders.stock  = updateOreders.stock - quantites.reduce(function (a, b) { return a + b; }, 0);
       await updateOreders.save()
     });
 
