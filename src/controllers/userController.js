@@ -348,16 +348,6 @@ const updateProfile = async (req, res) => {
   sendToken(updatedUser, 200, res);
 };
 
-// creating token
-async function sendToken(user, statusCode, res) {
-  let token = await user.getSignedToken();
-  delete user.password;
-  res.status(statusCode).json({
-    user,
-    token,
-  });
-}
-  
 
 var otp = Math.random();
 otp = otp * 1000000;
@@ -449,12 +439,16 @@ const userActivate = async (req, res) => {
 };
 
 
-
-
-
-
-
-
+// creating token
+async function sendToken(user, statusCode, res) {
+  let token = await user.getSignedToken();
+  delete user.password;
+  res.status(statusCode).json({
+    user,
+    token,
+  });
+}
+  
 module.exports = {
   loginApi,
   signUpApi,
