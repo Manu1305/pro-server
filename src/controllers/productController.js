@@ -1,6 +1,7 @@
 const Notification = require("../models/Notifications");
 const Products = require("../models/productModel");
 const ErrorResponse = require("../utilis/errorResponse");
+const Adminfee =require("../models/Adminfee")
 
 const getAllProduct = async (req, res) => {
   try {
@@ -196,6 +197,35 @@ const uploadImages = async (req, res, next) => {
   return res.status('success')
 }
 
+const adminfee = async (req, res) => {
+  try {
+    
+    const fee =await Adminfee.findByIdAndUpdate("6527bd184e54967fde21ac99", {fee:req.params.fee}, {
+      new: true,
+    });
+     await fee.save()
+
+
+     console.log("Check",fee)
+    res.status(200).send("Fee saved successfully" + fee);
+    // console.log(fees);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+const findAdminfee =async (req,res)=>{
+  try{
+    const fee =await Adminfee.findById("6527bd184e54967fde21ac99")
+    res.status(200).json(fee);
+  }
+  catch(err){
+    console.log(err)
+  }
+}
+
+
 module.exports = {
   getAllProduct,
   addNewProduct,
@@ -206,4 +236,6 @@ module.exports = {
   getOneProduct,
   uploadImages,
   productColorImages,
+  adminfee,
+  findAdminfee
 };
