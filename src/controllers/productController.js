@@ -161,27 +161,23 @@ const removeRequestedProducts = async (req, res) => {
 const updateProduct = async (req, res, next) => {
   // const productId = req.params.id;
 
-  const { size, total } = req.body;
+  const { selectedSizes } = req.body;
+  console.log("SIze", selectedSizes)
 
   try {
-    // const id = new ObjectId(req.params.id)
     const updateProduct = await Products.findById(req.params.id);
 
     if (!updateProduct) next(new ErrorResponse("Product not found", 401));
+
+
     // update all quantites
-    Object.keys(size).forEach((key, index) => {
-      const sizeKey = `size${index + 1}`;
-      updateProduct.productDetail.selectedSizes[sizeKey].quantities += parseInt(
-        size[key],
-        10
-      );
-    });
+    for (const key of Object.keys(selectedSizes)) {
+      const quantityToAdd = parseInt(selectedSizes[key]);
+      updateProduct.productDetails[0].qtyAndSizes[key] += quantityToAdd;
+    }
 
-    // update qunatity
-    // updateProduct.totalQuantity = updateProduct.totalQuantity + parseInt(total);
-
-    console.log(updateProduct.totalQuantity);
-    const ack = updateProduct.save();
+    const ack = await updateProduct.save();
+    console.log(ack.productDetails[0]);
     res.status(200).json({ success: true, msg: updateProduct });
   } catch (error) {
     return next(new ErrorResponse(error, 500));
