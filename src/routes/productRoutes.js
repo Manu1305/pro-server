@@ -21,7 +21,9 @@ const {
   removeRequestedProducts,
   updateProduct,
   getOneProduct,
-  productColorImages
+  productColorImages,
+  adminfee,
+  findAdminfee
 } = require("../controllers/productController");
 
 
@@ -73,6 +75,8 @@ router.put("/remove-requested-product/:id", removeRequestedProducts);
 // update product / increase quantity
 router.put("/update-seller-product/:id", updateProduct);
 router.get("/get-single-products/:id", getOneProduct);
+router.post("/admin-fee/:fee", adminfee);
+router.get("/get-admin-fee", findAdminfee);
 
 
 module.exports = router;
