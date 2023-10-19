@@ -1,13 +1,11 @@
 const { refundCheckout } = require("../helper/refund");
 const Order = require("../models/Order");
 const WithdrawModule = require("../models/WithdrawModule");
-const User = require("../models/userModel");
 const ErrorResponse = require("../utilis/errorResponse");
 const PackageDetails = require("../models/PackageDetailsModel");
 
 // siign delivery
 const assignDelivery = async (req, res) => {
-  console.log("Allow delivery");
   try {
     if (!req.params.id) {
       return res.status(401).json({ error: "Product not found" });
@@ -17,8 +15,6 @@ const assignDelivery = async (req, res) => {
       isAssignDlv: true,
       orderStatus: "Dispatched 1",
     });
-
-    console.log(updateProduct);
 
     res
       .status(201)

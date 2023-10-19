@@ -1,10 +1,11 @@
 const Notification = require("../models/Notifications");
 const Products = require("../models/productModel");
 const ErrorResponse = require("../utilis/errorResponse");
+const Adminfee =require("../models/Adminfee")
 
 const getAllProduct = async (req, res) => {
   try {
-    const allproduct = await Products.find();
+    const allproduct = await Products.find().sort({ _id: -1 });
     res.status(200).json(allproduct);
     console.log("sent")
   } catch (error) {
@@ -12,19 +13,20 @@ const getAllProduct = async (req, res) => {
   }
 };
 
-const getOneProduct =async (req, res,next) => {
+const getOneProduct = async (req, res, next) => {
 
-  const productId =req.params.id
+  const productId = req.params.id
 
-  try{
+  try {
     const getOneproduct = await Products.findById(productId);
 
-    if(!getOneproduct) next(new ErrorResponse({suucess:false ,messgae:"Product not found"},404))
+    if (!getOneproduct) next(new ErrorResponse({ suucess: false, messgae: "Product not found" }, 404))
 
     res.status(200).json(getOneproduct);
   }
-  catch (error) { console.log(error+'fetching one product error ')
-}
+  catch (error) {
+    console.log(error + 'fetching one product error ')
+  }
 }
 
 // add new Product
@@ -47,7 +49,7 @@ const addNewProduct = async (req, res) => {
     if (error.code === 11000) {
       res.status(500).send({ code: errorCode, errorMessage });
       return;
-    } 
+    }
     res.status(500).send({ code: errorCode, errorMessage });
   }
 };
@@ -58,22 +60,25 @@ const addNewProduct = async (req, res) => {
 const productColorImages = async (req, res) => {
 
   console.log(res.files)
-  
+
   const qtyAndSizes = JSON.parse(req.body.qtyAndSizes);
   const color = req.body.color;
-  console.log("req.params.productId",req.params.productId)
   const images = req.files.map((ele) => ele.location);
 
 
 
   const product = await Products.findById(req.params.productId);
 
+  const quantites = Object.values(qtyAndSizes);
+
   product.productDetails.push({
     qtyAndSizes,
     color,
     images
-  })
+  });
 
+  // adding stocks
+  product.stock = product.stock + quantites.reduce(function (a, b) { return a + b; }, 0);
 
   const ack = product.save()
   res.status(200).json({ success: true, message: ack })
@@ -157,34 +162,28 @@ const removeRequestedProducts = async (req, res) => {
 const updateProduct = async (req, res, next) => {
   // const productId = req.params.id;
 
-  const { size, total } = req.body;
+  const { selectedSizes } = req.body;
+  console.log("SIze", selectedSizes)
 
   try {
-    // const id = new ObjectId(req.params.id)
     const updateProduct = await Products.findById(req.params.id);
 
     if (!updateProduct) next(new ErrorResponse("Product not found", 401));
+
+
     // update all quantites
-    Object.keys(size).forEach((key, index) => {
-      const sizeKey = `size${index + 1}`;
-      updateProduct.productDetail.selectedSizes[sizeKey].quantities += parseInt(
-        size[key],
-        10
-      );
-    });
+    for (const key of Object.keys(selectedSizes)) {
+      const quantityToAdd = parseInt(selectedSizes[key]);
+      updateProduct.productDetails[0].qtyAndSizes[key] += quantityToAdd;
+    }
 
-    // update qunatity
-    // updateProduct.totalQuantity = updateProduct.totalQuantity + parseInt(total);
-
-    console.log(updateProduct.totalQuantity);
-    const ack = updateProduct.save();
+    const ack = await updateProduct.save();
+    console.log(ack.productDetails[0]);
     res.status(200).json({ success: true, msg: updateProduct });
   } catch (error) {
     return next(new ErrorResponse(error, 500));
   }
 };
-
-
 
 
 const uploadImages = async (req, res, next) => {
@@ -196,6 +195,35 @@ const uploadImages = async (req, res, next) => {
   return res.status('success')
 }
 
+const adminfee = async (req, res) => {
+  try {
+    
+    const fee =await Adminfee.findByIdAndUpdate("6527bd184e54967fde21ac99", {fee:req.params.fee}, {
+      new: true,
+    });
+     await fee.save()
+
+
+     console.log("Check",fee)
+    res.status(200).send("Fee saved successfully" + fee);
+    // console.log(fees);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+const findAdminfee =async (req,res)=>{
+  try{
+    const fee =await Adminfee.findById("6527bd184e54967fde21ac99")
+    res.status(200).json(fee);
+  }
+  catch(err){
+    console.log(err)
+  }
+}
+
+
 module.exports = {
   getAllProduct,
   addNewProduct,
@@ -206,4 +234,6 @@ module.exports = {
   getOneProduct,
   uploadImages,
   productColorImages,
+  adminfee,
+  findAdminfee
 };

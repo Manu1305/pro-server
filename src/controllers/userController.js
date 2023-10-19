@@ -28,6 +28,18 @@ const getAllUser = async (req, res) => {
   }
 };
 
+const getSingleUser = async (req, res) => {
+ const  emailid=req.params.id
+  try {
+    const User = await Users.findOne({email:emailid});
+
+    res.status(200).json(User);
+  } catch (error) {
+    console.error(error); 
+    res.status(500).json({ error });
+  }
+};
+
 const loginApi = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -336,16 +348,6 @@ const updateProfile = async (req, res) => {
   sendToken(updatedUser, 200, res);
 };
 
-// creating token
-async function sendToken(user, statusCode, res) {
-  let token = await user.getSignedToken();
-  delete user.password;
-  res.status(statusCode).json({
-    user,
-    token,
-  });
-}
-  
 
 var otp = Math.random();
 otp = otp * 1000000;
@@ -437,12 +439,16 @@ const userActivate = async (req, res) => {
 };
 
 
-
-
-
-
-
-
+// creating token
+async function sendToken(user, statusCode, res) {
+  let token = await user.getSignedToken();
+  delete user.password;
+  res.status(statusCode).json({
+    user,
+    token,
+  });
+}
+  
 module.exports = {
   loginApi,
   signUpApi,
@@ -454,6 +460,7 @@ module.exports = {
   sendOTP,
   verifyOtp,
   userDeactivate,
-  userActivate
+  userActivate,
+  getSingleUser
 
 };
