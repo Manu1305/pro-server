@@ -33,26 +33,20 @@ app.use(bodyParser.urlencoded({  extended: true }));
 app.use(express.json());
 
 // cors policy
-// app.use(
-//   cors({
-//     permissionsPolicy: {
-//       features: {
-//         chUaFormFactor: false,
-//       },
-//     },
-//   })
-// );
 
+const allowedOrigins = ['https://hitecmart.com'];
 
-const corsOptions ={
-  origin:'*', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200,
-}
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
 
-app.use(cors(corsOptions))
-
-
+app.use(cors(corsOptions));
 
 // routes
 app.use("/user", userRouter);
