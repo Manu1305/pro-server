@@ -59,7 +59,6 @@ const addNewProduct = async (req, res) => {
 
 const productColorImages = async (req, res) => {
 
-  console.log(res.files)
 
   const qtyAndSizes = JSON.parse(req.body.qtyAndSizes);
   const color = req.body.color;
@@ -80,7 +79,7 @@ const productColorImages = async (req, res) => {
   // adding stocks
   product.stock = product.stock + quantites.reduce(function (a, b) { return a + b; }, 0);
 
-  const ack = product.save()
+  const ack =await product.save()
   res.status(200).json({ success: true, message: ack })
 }
 
