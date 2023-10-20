@@ -28,7 +28,10 @@ const ReturnOrder = new mongoose.Schema(
       type: String,
       required: true,
     },
-    images: [],
+    images: {
+      type: Array,
+      require: true
+    },
 
     amount: {
       type: Number,
