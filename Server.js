@@ -34,7 +34,7 @@ app.use(express.json());
 // cors policy
 
 const corsOptions = {
-  origin: 'https://hitecmart.com' && 'http://localhost:3000', // Replace with the actual origin of your client application
+  origin: 'https://hitecmart.com', // Replace with the actual origin of your client application
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // If you need to pass cookies or other credentials
   optionsSuccessStatus: 204, // For preflight requests
