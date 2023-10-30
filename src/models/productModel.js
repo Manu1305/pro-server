@@ -134,9 +134,9 @@ const products = new mongoose.Schema(
       },
     ],
     status: {
-      type: Boolean,
+      type: String,
       required: true,
-      default: false
+      default: "Pending"
     },
     tags: {
       type: String,

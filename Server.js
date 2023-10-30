@@ -26,26 +26,21 @@ const PORT = process.env.PORT;
 const app = express();
 
 // setting limit
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({  extended: true }));
-
+app.use(bodyParser.json({limit: '100mb'}));
+app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
 // to read data in json format
 app.use(express.json());
 
 // cors policy
-// app.use(
-//   cors({
-//     permissionsPolicy: {
-//       features: {
-//         chUaFormFactor: false,
-//       },
-//     },
-//   })
-// );
 
+const corsOptions = {
+  origin: 'https://hitecmart.com' , // Replace with the actual origin of your client application
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // If you need to pass cookies or other credentials
+  optionsSuccessStatus: 204, // For preflight requests
+};
 
-app.use(cors());
-
+app.use(cors(corsOptions));
 
 // routes
 app.use("/user", userRouter);

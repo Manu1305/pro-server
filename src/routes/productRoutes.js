@@ -54,7 +54,11 @@ const upload = multer({
       cb(null, { fieldname: file.fieldname })
     },
     key: function (req, file, cb) {
-      cb(null, file.originalname)
+
+      // adding a unique file Name
+      const fileName = Date.now() + "_" + file.fieldname + "_" + file.originalname;
+        cb(null, fileName);
+        cb(null, fileName);
     }
   })
 });
@@ -67,7 +71,7 @@ router.get("/get-all-products", getAllProduct);
 
 router.post("/requested-Products", requestedProducts);
 
-router.put("/allow-requested-product/:id", allowRequestedProducts);
+router.put("/change-product-status/:id", allowRequestedProducts);
 
 
 router.put("/remove-requested-product/:id", removeRequestedProducts);

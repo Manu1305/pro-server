@@ -1,55 +1,49 @@
 const ReturnOrder = require("../models/ReturnOrderModel");
 
+
 const ReturnProd = async (req, res) => {
-  const {
-    paymentId,
-    images,
-    productIssue,
-    phone,
-    uname,
-    orderId,
-    seller,
-    amount,
-  } = req.body;
-
-  const imageBase64 = Object.values(images);
-
-
-
-  console.log(imageBase64)
   try {
-    
 
-    // const user = new ReturnOrder({ ...ReturnOrderData, allRet: false });
+    const images = req.files.map((ele) => ele.location);
+
+
+    const {
+      paymentId,
+      phone,
+      uname,
+      orderId,
+      seller,
+      amount,
+    } = req.body;
+
+
+    const productIssue= req.body.productIssue
 
     const newReturnOrder = new ReturnOrder({
       orderId,
-      userId: req.user.id,
+      userId: req.user.id, // Assuming you have user authentication middleware
       paymentId,
       seller,
       uname,
       phone,
       productIssue,
-      images:imageBase64,
+      images,
       amount,
       retStatus: false,
     });
 
     const ack = await newReturnOrder.save();
-
-    const allData = await ReturnOrder.find();
-    // console.log(allData);
-    res.status(200).json(ack);
-
+    // Log the successful request here
+    res.status(200).json({ success: true, data: ack });
   } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(error);
-    if (error.code === 11000) {
-      res.status(500).send({ code: errorCode, errorMessage });
-      return;
+    // Log the error for debugging
+    console.error(error);
+
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ success: false, error: 'Validation error', details: error.errors });
+    } else {
+      res.status(500).json({ success: false, error: 'Internal server error' });
     }
-    res.status(500).send({ code: errorCode, errorMessage });
   }
 };
 
@@ -78,5 +72,7 @@ const removeRequestedReturn = async (req, res) => {
 };
 
 module.exports = {
-  ReturnProd, getAllReturn, removeRequestedReturn
+  ReturnProd,
+  getAllReturn,
+  removeRequestedReturn,
 };
