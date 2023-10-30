@@ -71,7 +71,7 @@ router.get("/get-all-products", getAllProduct);
 
 router.post("/requested-Products", requestedProducts);
 
-router.put("/allow-requested-product/:id", allowRequestedProducts);
+router.put("/change-product-status/:id", allowRequestedProducts);
 
 
 router.put("/remove-requested-product/:id", removeRequestedProducts);
