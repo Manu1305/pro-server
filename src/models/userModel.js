@@ -52,6 +52,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       require: false,
     },
+    longitude :{
+      type: Number,
+      require:false
+    }
+    ,
+    latitude :{
+      type: Number,
+      require:false
+    },
     address: {
       pincode: {
         type: Number,
@@ -77,6 +86,8 @@ const UserSchema = new mongoose.Schema(
         type: String,
         require: true,
       },
+      
+   
     },
 
     storeSetup: {
@@ -102,6 +113,7 @@ const UserSchema = new mongoose.Schema(
         type: String,
         required: false,
       },
+    
     },
   },
   { timestamps: true }

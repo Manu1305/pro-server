@@ -116,6 +116,15 @@ const products = new mongoose.Schema(
       required: false,
       default:null
     },
+    longitude :{
+      type: Number,
+      require:false
+    }
+    ,
+    latitude :{
+      type: Number,
+      require:false
+    },
 
     reviews: [
       {
