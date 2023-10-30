@@ -1,7 +1,7 @@
 const Notification = require("../models/Notifications");
 const Products = require("../models/productModel");
 const ErrorResponse = require("../utilis/errorResponse");
-const Adminfee =require("../models/Adminfee")
+const Adminfee = require("../models/Adminfee")
 
 const getAllProduct = async (req, res) => {
   try {
@@ -79,7 +79,7 @@ const productColorImages = async (req, res) => {
   // adding stocks
   product.stock = product.stock + quantites.reduce(function (a, b) { return a + b; }, 0);
 
-  const ack =await product.save()
+  const ack = await product.save()
   res.status(200).json({ success: true, message: ack })
 }
 
@@ -90,11 +90,11 @@ const requestedProducts = async (req, res) => {
     let requestedProducts;
 
     if (type === "admin") {
-      requestedProducts = await Products.find({ status: false });
+      requestedProducts = await Products.find({ status: "Pending" });
     }
     if (type === "seller") {
       requestedProducts = await Products.find({ seller: seller });
-      requestedProducts.filter((prodcut) => prodcut.status === false);
+      requestedProducts.filter((prodcut) => prodcut.status === "Pending");
     }
 
     console.log("DATA", requestedProducts);
@@ -111,13 +111,14 @@ const requestedProducts = async (req, res) => {
 //allow requested products
 const allowRequestedProducts = async (req, res) => {
   console.log(req.params.id);
+  
   try {
     if (!req.params.id) {
       return res.status(401).json({ error: "Product not found" });
     }
 
     const updateProduct = await Products.findByIdAndUpdate(req.params.id, {
-      status: true,
+      status: req.body.status,
     });
 
     console.log(updateProduct);
@@ -159,26 +160,18 @@ const removeRequestedProducts = async (req, res) => {
 
 // update product ---Akshay
 const updateProduct = async (req, res, next) => {
-  // const productId = req.params.id;
+  const productId = req.params.id;
 
-  const { selectedSizes } = req.body;
-  console.log("SIze", selectedSizes)
+  const { productInfo, generalDetails } = req.body
 
   try {
-    const updateProduct = await Products.findById(req.params.id);
-
-    if (!updateProduct) next(new ErrorResponse("Product not found", 401));
 
 
-    // update all quantites
-    for (const key of Object.keys(selectedSizes)) {
-      const quantityToAdd = parseInt(selectedSizes[key]);
-      updateProduct.productDetails[0].qtyAndSizes[key] += quantityToAdd;
-    }
-
-    const ack = await updateProduct.save();
-    console.log(ack.productDetails[0]);
-    res.status(200).json({ success: true, msg: updateProduct });
+    const updateProduct = await Products.findByIdAndUpdate({ _id: productId }, {
+      ...generalDetails,
+      productInfo: { ...productInfo }
+    }, { new: true })
+    res.status(200).json({ success: true, ack: updateProduct });
   } catch (error) {
     return next(new ErrorResponse(error, 500));
   }
@@ -196,14 +189,14 @@ const uploadImages = async (req, res, next) => {
 
 const adminfee = async (req, res) => {
   try {
-    
-    const fee =await Adminfee.findByIdAndUpdate("6527bd184e54967fde21ac99", {fee:req.params.fee}, {
+
+    const fee = await Adminfee.findByIdAndUpdate("6527bd184e54967fde21ac99", { fee: req.params.fee }, {
       new: true,
     });
-     await fee.save()
+    await fee.save()
 
 
-     console.log("Check",fee)
+    console.log("Check", fee)
     res.status(200).send("Fee saved successfully" + fee);
     // console.log(fees);
   } catch (error) {
@@ -212,12 +205,12 @@ const adminfee = async (req, res) => {
 };
 
 
-const findAdminfee =async (req,res)=>{
-  try{
-    const fee =await Adminfee.findById("6527bd184e54967fde21ac99")
+const findAdminfee = async (req, res) => {
+  try {
+    const fee = await Adminfee.findById("6527bd184e54967fde21ac99")
     res.status(200).json(fee);
   }
-  catch(err){
+  catch (err) {
     console.log(err)
   }
 }
