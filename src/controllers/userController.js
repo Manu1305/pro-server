@@ -84,7 +84,7 @@ const signUpApi = async (req, res) => {
       // calculate one month
       expDate.setMonth(expDate.getMonth() + 1);
 
-      const { name, email, phone, password, gst, urType, address, shopName } =
+      const { name, email, phone, password, gst, urType, address, shopName,latitude,longitude } =
         userData;
       const salt = await bcrypt.genSaltSync(10);
       const hashedpassword = bcrypt.hashSync(password, salt);
@@ -101,6 +101,8 @@ const signUpApi = async (req, res) => {
         shopName,
         gst,
         address,
+        longitude,
+        latitude
       });
     
 
