@@ -88,6 +88,7 @@ const requestedProducts = async (req, res) => {
   const { type, seller } = req.body;
   try {
     let requestedProducts;
+    
 
     if (type === "admin") {
       requestedProducts = await Products.find({ status: "Pending" });
