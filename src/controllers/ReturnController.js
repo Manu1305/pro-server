@@ -1,23 +1,12 @@
 const ReturnOrder = require("../models/ReturnOrderModel");
 
-
 const ReturnProd = async (req, res) => {
   try {
-
     const images = req.files.map((ele) => ele.location);
 
+    const { paymentId, phone, uname, orderId, seller, amount } = req.body;
 
-    const {
-      paymentId,
-      phone,
-      uname,
-      orderId,
-      seller,
-      amount,
-    } = req.body;
-
-
-    const productIssue= req.body.productIssue
+    const productIssue = req.body.productIssue;
 
     const newReturnOrder = new ReturnOrder({
       orderId,
@@ -39,14 +28,19 @@ const ReturnProd = async (req, res) => {
     // Log the error for debugging
     console.error(error);
 
-    if (error.name === 'ValidationError') {
-      res.status(400).json({ success: false, error: 'Validation error', details: error.errors });
+    if (error.name === "ValidationError") {
+      res
+        .status(400)
+        .json({
+          success: false,
+          error: "Validation error",
+          details: error.errors,
+        });
     } else {
-      res.status(500).json({ success: false, error: 'Internal server error' });
+      res.status(500).json({ success: false, error: "Internal server error" });
     }
   }
 };
-
 
 const getAllReturn = async (req, res) => {
   try {
