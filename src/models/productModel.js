@@ -1,21 +1,18 @@
 const mongoose = require("mongoose");
 
-
-
 const productDetail = new mongoose.Schema({
   color: {
     type: String,
-    require: true
+    require: true,
   },
   qtyAndSizes: {
     type: Object,
-    required: true
+    required: true,
   },
   images: {
     type: Array,
-    require: true
+    require: true,
   },
-
 });
 
 const products = new mongoose.Schema(
@@ -23,7 +20,7 @@ const products = new mongoose.Schema(
     seller: {
       type: String,
       required: true,
-      default: "M"
+      default: "M",
     },
     productCode: {
       type: String,
@@ -39,7 +36,7 @@ const products = new mongoose.Schema(
     productDetails: {
       type: [productDetail],
       // required: true,
-      default:[]
+      default: [],
     },
     selectedCategory: {
       type: String,
@@ -97,10 +94,19 @@ const products = new mongoose.Schema(
         type: String,
         required: true,
       },
+      
+    },
+    longitude: {
+      type: Number,
+      require: false,
+    },
+    latitude: {
+      type: Number,
+      require: false,
     },
     publishDate: {
       type: Date,
-      required: false
+      required: false,
     },
     stock: {
       type: Number,
@@ -114,16 +120,7 @@ const products = new mongoose.Schema(
     MoreDetails: {
       type: String,
       required: false,
-      default:null
-    },
-    longitude :{
-      type: Number,
-      require:false
-    }
-    ,
-    latitude :{
-      type: Number,
-      require:false
+      default: null,
     },
 
     reviews: [
@@ -145,15 +142,14 @@ const products = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      default: "Pending"
+      default: "Pending",
     },
     tags: {
       type: String,
       required: false,
-      default:"Shist"
+      default: "Shist",
       // default: false
     },
-   
   },
 
   { timestamps: true }
