@@ -88,7 +88,7 @@ const requestedProducts = async (req, res) => {
   const { type, seller } = req.body;
   try {
     let requestedProducts;
-    
+
 
     if (type === "admin") {
       requestedProducts = await Products.find({ status: "Pending" });
@@ -112,7 +112,7 @@ const requestedProducts = async (req, res) => {
 //allow requested products
 const allowRequestedProducts = async (req, res) => {
   console.log(req.params.id);
-  
+
   try {
     if (!req.params.id) {
       return res.status(401).json({ error: "Product not found" });
@@ -188,6 +188,31 @@ const uploadImages = async (req, res, next) => {
   return res.status('success')
 }
 
+// update size image and color
+const updateSizeAndImg = async (req, res, next) => {
+
+
+  try {
+
+    const { index, qtyAndSizes, color, images } = req.body
+    const product = await Products.findById(req.params.id);
+
+    // console.log("Req Bory",images)
+
+    product.productDetails[index].qtyAndSizes = qtyAndSizes;
+    product.productDetails[index].color = color;
+    product.productDetails[index].images = images;
+
+
+    const ack = await product.save();
+    res.status(200).json({ message: "success", ack })
+
+  } catch (error) {
+    console.log("Error", error);
+  }
+
+}
+
 const adminfee = async (req, res) => {
   try {
 
@@ -204,7 +229,7 @@ const adminfee = async (req, res) => {
     console.log(error);
   }
 };
- 
+
 
 const findAdminfee = async (req, res) => {
   try {
@@ -228,5 +253,8 @@ module.exports = {
   uploadImages,
   productColorImages,
   adminfee,
-  findAdminfee
+  findAdminfee,
+  updateSizeAndImg
 };
+
+

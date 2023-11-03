@@ -23,7 +23,8 @@ const {
   getOneProduct,
   productColorImages,
   adminfee,
-  findAdminfee
+  findAdminfee,
+  updateSizeAndImg
 } = require("../controllers/productController");
 
 
@@ -75,6 +76,7 @@ router.put("/change-product-status/:id", allowRequestedProducts);
 
 
 router.put("/remove-requested-product/:id", removeRequestedProducts);
+router.put("/update-size-color-images/:id", updateSizeAndImg);
 
 // update product / increase quantity
 router.put("/update-seller-product/:id", updateProduct);
