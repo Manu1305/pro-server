@@ -129,9 +129,7 @@ const allowRequestedProducts = async (req, res) => {
       status: req.body.status,
     });
 
-    console.log(updateProduct);
-
-    res.status(201).json({ success: true, ack: "Product added successfully" });
+    res.status(201).json({ success: true, ack: "Change Status Succesfully" });
   } catch (error) {
     if (error.code === 11000) {
       res.status(500).send({ code: error.code, errorMessage });
