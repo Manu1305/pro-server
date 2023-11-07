@@ -127,9 +127,9 @@ const allowRequestedProducts = async (req, res) => {
 
     const updateProduct = await Products.findByIdAndUpdate(req.params.id, {
       status: req.body.status,
-    });
+    },{new:true});
 
-    res.status(201).json({ success: true, ack: "Change Status Succesfully" });
+    res.status(201).json({ success: true, ack: updateProduct });
   } catch (error) {
     if (error.code === 11000) {
       res.status(500).send({ code: error.code, errorMessage });
