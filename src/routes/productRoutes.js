@@ -24,7 +24,8 @@ const {
   productColorImages,
   adminfee,
   findAdminfee,
-  updateSizeAndImg
+  updateSizeAndImg,
+  deleteImages
 } = require("../controllers/productController");
 
 
@@ -83,6 +84,7 @@ router.put("/update-seller-product/:id", updateProduct);
 router.get("/get-single-products/:id", getOneProduct);
 router.post("/admin-fee/:fee", adminfee);
 router.get("/get-admin-fee", findAdminfee);
+router.post("/delete-single-images/:id", deleteImages);
 
 
 module.exports = router;

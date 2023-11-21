@@ -2,12 +2,26 @@ const Notification = require("../models/Notifications");
 const Products = require("../models/productModel");
 const ErrorResponse = require("../utilis/errorResponse");
 const Adminfee = require("../models/Adminfee");
+const AWS = require("@aws-sdk/client-s3")
+const dotenv = require('dotenv')
+
+
+dotenv.config({ path: "'../../src/config/.env" });
+
+
+// create instance
+const s3 = new AWS.S3({
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.AWS_SECRETE_KEY,
+  },
+  region: process.env.REGION
+});
 
 const getAllProduct = async (req, res) => {
   try {
     const allproduct = await Products.find().sort({ _id: -1 });
     res.status(200).json(allproduct);
-    console.log("sent");
   } catch (error) {
     res.json({ message: error });
   }
@@ -68,6 +82,9 @@ const productColorImages = async (req, res) => {
   const color = req.body.color;
   const images = req.files.map((ele) => ele.location);
 
+  console.log("Files", req.files);
+
+
   const product = await Products.findById(req.params.productId);
 
   const quantites = Object.values(qtyAndSizes);
@@ -79,12 +96,12 @@ const productColorImages = async (req, res) => {
   });
 
 
-    // adding stocks
-    (product.stock =
-      product.stock +
-      quantites.reduce(function (a, b) {
-        return a + b;
-      }, 0));
+  // adding stocks
+  (product.stock =
+    product.stock +
+    quantites.reduce(function (a, b) {
+      return a + b;
+    }, 0));
 
   const ack = await product.save();
   res.status(200).json({ success: true, message: ack });
@@ -105,7 +122,6 @@ const requestedProducts = async (req, res) => {
       requestedProducts.filter((prodcut) => prodcut.status === "Pending");
     }
 
-    console.log("DATA", requestedProducts);
     if (requestedProducts) {
       return res.status(200).json(requestedProducts);
     }
@@ -127,7 +143,7 @@ const allowRequestedProducts = async (req, res) => {
 
     const updateProduct = await Products.findByIdAndUpdate(req.params.id, {
       status: req.body.status,
-    },{new:true});
+    }, { new: true });
 
     res.status(201).json({ success: true, ack: updateProduct });
   } catch (error) {
@@ -140,12 +156,39 @@ const allowRequestedProducts = async (req, res) => {
 
 // remove requested products
 const removeRequestedProducts = async (req, res) => {
-  console.log(req.params.id);
-
   try {
     const { heading, desc, email } = req.body.message;
-    const updatedProduct = await Products.findByIdAndDelete(req.params.id);
-    console.log(updatedProduct);
+
+
+
+    const updatedProduct = await Products.findById(req.params.id);
+
+    // Delete img from aws 
+    updatedProduct.productDetails.map(item => {
+      item.images.map((ele) => {
+        console.log(ele)
+        const getExtension = ele.split('.com/')
+        const params = {
+          Bucket: process.env.BUCKRT_NAME_PROD,
+          Key: getExtension[1],
+        };
+
+        s3.deleteObject(params, (error, data) => {
+          if (error) {
+            res.status(500).send(error);
+          } else {
+            console.log(data);
+          }
+
+        });
+      })
+    })
+
+
+
+    // const message = await updateProduct.save
+
+    const deleteProduct = await Products.findByIdAndDelete(req.params.id)
 
     const newNoti = await Notification.create({
       // sellerId: email,
@@ -156,7 +199,9 @@ const removeRequestedProducts = async (req, res) => {
 
     const ack = newNoti.save();
 
-    res.status(200).json({ message: ack, ack: "Product deleted....!" });
+    res.status(200).json({ message: ack, ack: deleteProduct });
+
+
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -187,7 +232,6 @@ const updateProduct = async (req, res, next) => {
 const uploadImages = async (req, res, next) => {
   const { file } = req;
 
-  console.log(file);
   if (!file) return next(new ErrorResponse({ message: "Bad request" }, 500));
 
   return res.status("success");
@@ -247,6 +291,48 @@ const findAdminfee = async (req, res) => {
   }
 };
 
+
+// aws delete images from aws bucket
+
+const deleteImages = async (req, res) => {
+
+  const getExtension = req.body.filename.split('.com/')
+  const params = {
+    Bucket: process.env.BUCKRT_NAME_PROD,
+    Key: getExtension[1], // req.body.url
+  };
+
+  try {
+    s3.deleteObject(params, (error, data) => {
+      if (error) {
+        res.status(500).send(error);
+      } else {
+        console.log(data);
+      }
+
+    });
+
+    const product = await Products.findById(req.params.id);
+
+
+    const fromIndex = product.productDetails[`${req.body.index}`].images.indexOf(req.body.filename)
+
+
+    product.productDetails[`${req.body.index}`].images.splice(fromIndex, 1)
+    const ack = await product.save()
+
+    res.status(200).send({ message: "File has been deleted successfully", ack });
+
+
+
+  } catch (err) {
+    console.error(err);
+  }
+
+};
+
+
+
 module.exports = {
   getAllProduct,
   addNewProduct,
@@ -259,7 +345,9 @@ module.exports = {
   productColorImages,
   adminfee,
   findAdminfee,
-  updateSizeAndImg
+  updateSizeAndImg,
+  deleteImages,
 };
+
 
 
