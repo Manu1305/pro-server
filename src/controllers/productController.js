@@ -78,33 +78,40 @@ const addNewProduct = async (req, res) => {
 // Requested products from seller and Admin
 
 const productColorImages = async (req, res) => {
-  const qtyAndSizes = JSON.parse(req.body.qtyAndSizes);
-  const color = req.body.color;
-  const images = req.files.map((ele) => ele.location);
+  try {
+    const qtyAndSizes = JSON.parse(req.body.qtyAndSizes);
+    const color = req.body.color;
+    const images = req.files.map((ele) => ele.location);
 
-  console.log("Files", req.files);
+    // console.log("Files", req.files);
+
+    console.log("color", req.body.color)
+
+    const product = await Products.findById(req.params.productId);
+
+    const quantites = Object.values(qtyAndSizes);
+
+    const checkColors = color.split(',')
+
+    product.productDetails.push({
+      qtyAndSizes,
+      color: checkColors.length > 1 ? checkColors : req.body.color,
+      images,
+    });
 
 
-  const product = await Products.findById(req.params.productId);
+    // adding stocks
+    (product.stock =
+      product.stock +
+      quantites.reduce(function (a, b) {
+        return a + b;
+      }, 0));
 
-  const quantites = Object.values(qtyAndSizes);
-
-  product.productDetails.push({
-    qtyAndSizes,
-    color,
-    images,
-  });
-
-
-  // adding stocks
-  (product.stock =
-    product.stock +
-    quantites.reduce(function (a, b) {
-      return a + b;
-    }, 0));
-
-  const ack = await product.save();
-  res.status(200).json({ success: true, message: ack });
+    const ack = await product.save();
+    res.status(200).json({ success: true, message: ack, });
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 const requestedProducts = async (req, res) => {
@@ -126,7 +133,7 @@ const requestedProducts = async (req, res) => {
       return res.status(200).json(requestedProducts);
     }
 
-    res.send({ success: true, message: "Empty records" });
+    res.send({ success: true, message: "Empty records", });
   } catch (error) {
     res.status(500).send(error);
   }
