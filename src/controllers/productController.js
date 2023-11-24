@@ -141,6 +141,8 @@ const allowRequestedProducts = async (req, res) => {
       return res.status(401).json({ error: "Product not found" });
     }
 
+    console.log(req.body.status)
+
     const updateProduct = await Products.findByIdAndUpdate(req.params.id, {
       status: req.body.status,
     }, { new: true });
@@ -179,7 +181,6 @@ const removeRequestedProducts = async (req, res) => {
           } else {
             console.log(data);
           }
-
         });
       })
     })
@@ -332,6 +333,31 @@ const deleteImages = async (req, res) => {
 };
 
 
+const runQyeries = async (req, res) => {
+
+  // const ack = ["655dc52abfc41cf69b5d1ede", "655de016bfc41cf69b5f74f0", "655de5f2bfc41cf69b604b41", "655de46abfc41cf69b5fff79", "655de38abfc41cf69b5fe310", "655de016bfc41cf69b5f74f0", "655ddf8ebfc41cf69b5f7036", "655ddeeebfc41cf69b5f6b7e", "655dde35bfc41cf69b5f621c", "655ddd4abfc41cf69b5f5416", "655ddb02bfc41cf69b5f01e9", "655dda06bfc41cf69b5efd33", "655dd8a6bfc41cf69b5ee1e4", "655dd7b5bfc41cf69b5edd3a", "655dd68fbfc41cf69b5ecb3d", "655dd5d0bfc41cf69b5ec698", "655dd324bfc41cf69b5eafaf", "655dccdcbfc41cf69b5ddbe1", "655dcb96bfc41cf69b5d9158", "655dca92bfc41cf69b5d7faf"].map(async (item) => {
+  //   const prodcut = await Products.findByIdAndUpdate(item, {
+  //     seller: "sohaibansari197@gmail.com",
+  //     latitude: 12.976619629165834,
+  //     longitude: 77.71858994414023
+  //   },
+  //     function (err, docs) {
+  //       if (err) {
+  //         console.log("Error",err)
+  //       }
+  //       else {
+  //         console.log("Updated User : ", docs);
+  //       }
+  //     }
+  //   )
+
+  //   await prodcut.save()
+
+  // })
+
+  const products = await Products.updateMany()
+}
+
 
 module.exports = {
   getAllProduct,
@@ -347,6 +373,7 @@ module.exports = {
   findAdminfee,
   updateSizeAndImg,
   deleteImages,
+  runQyeries
 };
 
 
