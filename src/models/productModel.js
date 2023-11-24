@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const productDetail = new mongoose.Schema({
   color: {
-    type: String,
+    type: Schema.Types.Mixed,
     require: true,
   },
   qtyAndSizes: {
