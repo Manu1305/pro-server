@@ -95,7 +95,7 @@ const products = new mongoose.Schema(
         type: String,
         required: true,
       },
-      
+
     },
     longitude: {
       type: Number,
