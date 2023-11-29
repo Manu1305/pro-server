@@ -23,19 +23,19 @@ const getAllUser = async (req, res) => {
     const allUser = await Users.find();
     res.status(200).json(allUser);
   } catch (error) {
-    console.error(error); 
+    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 const getSingleUser = async (req, res) => {
- const  emailid=req.params.id
+  const emailid = req.params.id
   try {
-    const User = await Users.findOne({email:emailid});
+    const User = await Users.findOne({ email: emailid });
 
     res.status(200).json(User);
   } catch (error) {
-    console.error(error); 
+    console.error(error);
     res.status(500).json({ error });
   }
 };
@@ -84,7 +84,7 @@ const signUpApi = async (req, res) => {
       // calculate one month
       expDate.setMonth(expDate.getMonth() + 1);
 
-      const { name, email, phone, password, gst, urType, address, shopName,latitude,longitude } =
+      const { name, email, phone, password, gst, urType, address, shopName, latitude, longitude } =
         userData;
       const salt = await bcrypt.genSaltSync(10);
       const hashedpassword = bcrypt.hashSync(password, salt);
@@ -104,7 +104,7 @@ const signUpApi = async (req, res) => {
         longitude,
         latitude
       });
-    
+
 
       let ack = await user.save();
       console.log("ack", ack);
@@ -124,7 +124,7 @@ const signUpApi = async (req, res) => {
       const { name, email, phone, password, gst, urType } = userData;
       const salt = await bcrypt.genSaltSync(10);
       const hashedpassword = bcrypt.hashSync(password, salt);
-      var mails=userData.email
+      var mails = userData.email
       const user = new Users({
         profilePicture: "bsdmbn",
         name,
@@ -149,16 +149,16 @@ const signUpApi = async (req, res) => {
           pass: "kvlflizslfiuxzse",
         },
       });
-    
+
       try {
-       
-    
-        const payload = { email: email};
-    
+
+
+        const payload = { email: email };
+
         // creating token with expiration
-       
-       
-        
+
+
+
         // send mail using optional parameters
         var mailOptions = {
           from: "manukrishnan858@gmail.com",
@@ -169,27 +169,27 @@ const signUpApi = async (req, res) => {
             <h2>Click>welcome to hitecmart ,your account created successfully</h2>
           `,
         };
-    
+
         // get the response
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
             console.log(error);
           } else {
             console.log("Email sent: " + info.response);
-    
+
             return res.status(200).json({ success: true, message: info.response });
           }
         });
       } catch (err) {
         console.log(err);
       }
-      
+
       let ack = await user.save();
       return res.send({ message: "success" });
 
-      
-      
-     
+
+
+
 
 
 
@@ -357,10 +357,10 @@ otp = parseInt(otp);
 
 const sendOTP = async (data, res) => {
 
-  console.log(data.body + "this is req.body")
+  console.log(data.body.phone + "this is req.body")
   const phone = data.body.phone;
-const usertype = await data.body.userType;
-   req.query({
+  const usertype = await data.body.userType;
+  req.query({
     "authorization": "BLHFvewrGpNhE56Wj1Y0z4qUAmnPt3VlaMQsSo2kJRdcgCTZDfu2zZ6g0rNfVT4KCcR1lODpBLwUHW7v",
     "sender_id": "HTCMRT",
     "message": 159934,
@@ -368,31 +368,34 @@ const usertype = await data.body.userType;
     "route": "dlt",
     "numbers": phone,
   });
-  
-  
+
+
   req.headers({
     "cache-control": "no-cache"
   });
-  
-  
+
+
   req.end(function (res) {
-    if (res.error) throw new Error(res.error);
-  
-    console.log(res.body);
+    if (res.error) {
+      console.log("Any Error", res)
+      return res.status(500).json(res.error)
+    };
+
   });
+  res.send({ message: "Otp sent succefully" })
 
 }
 
 const verifyOtp = async function (req, res) {
 
-if(req.body.phoneOtp==otp){
-  res.send({ message: "success" });
-  console.log('varified')
-}
-else{
-  res.send({ message: "failed" });
-  console.log("wron otp")
-}
+  if (req.body.phoneOtp == otp) {
+    res.send({ message: "success" });
+    console.log('varified')
+  }
+  else {
+    res.send({ message: "failed" });
+    console.log("wron otp")
+  }
 }
 
 
@@ -404,7 +407,7 @@ const userDeactivate = async (req, res) => {
     }
 
     const updateUser = await Users.findByIdAndUpdate(req.params.id, {
-      status:!req.body.actStatus
+      status: !req.body.actStatus
     });
 
     console.log(updateUser);
@@ -450,7 +453,7 @@ async function sendToken(user, statusCode, res) {
     token,
   });
 }
-  
+
 module.exports = {
   loginApi,
   signUpApi,
