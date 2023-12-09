@@ -55,8 +55,7 @@ const addNewProduct = async (req, res) => {
     const product = new Products({
       ...genInfo,
       productInfo,
-      // seller: req.user.email,   add middleware
-      seller: "req.user.email",
+      seller: req.user.email,   //add middleware
       longitude: 12.34,
       latitude: 12.34
     });
