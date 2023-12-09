@@ -71,6 +71,6 @@ const server = app.listen(PORT, () => {
 
 //if error occured
 process.on("unhandledRejection", (err, promise) => {
-  console.log(`Logged Error: ${err}`);
+  console.log(`CHECK ERROR AKSHAY : ${err}`);
   server.close(() => process.exit(1));
 });

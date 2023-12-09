@@ -49,16 +49,16 @@ const addNewProduct = async (req, res) => {
   try {
     const productInfo = req.body.productInfo;
     const genInfo = req.body.genInfo;
-
+    console.log("USer", req.user)
     console.log("Details ", genInfo);
-    console.log("uuuuu ", req.user);
 
     const product = new Products({
       ...genInfo,
       productInfo,
-      seller: req.user.email,
-      longitude: req.user.longitude,
-      latitude: req.user.latitude,
+      // seller: req.user.email,   add middleware
+      seller: "req.user.email",
+      longitude: 12.34,
+      latitude: 12.34
     });
     const ack = await product.save();
 
@@ -83,9 +83,11 @@ const productColorImages = async (req, res) => {
     const color = req.body.color;
     const images = req.files.map((ele) => ele.location);
 
-    // console.log("Files", req.files);
+    const prices = req.body.prices
 
-    console.log("color", req.body.color)
+    console.log("USer", req.user);
+
+    console.log("color", prices)
 
     const product = await Products.findById(req.params.productId);
 
@@ -97,17 +99,21 @@ const productColorImages = async (req, res) => {
       qtyAndSizes,
       color: checkColors.length > 1 ? checkColors : req.body.color,
       images,
+
     });
 
-
-    // adding stocks
-    (product.stock =
-      product.stock +
-      quantites.reduce(function (a, b) {
-        return a + b;
-      }, 0));
+   if(prices){
+    product.prices =JSON.parse( prices)
+   }
+      // adding stocks
+      (product.stock =
+        product.stock +
+        quantites.reduce(function (a, b) {
+          return a + b;
+        }, 0));
 
     const ack = await product.save();
+
     res.status(200).json({ success: true, message: ack, });
   } catch (error) {
     console.log(error)
@@ -362,8 +368,76 @@ const runQyeries = async (req, res) => {
 
   // })
 
-  const products = await Products.updateMany()
+
+  // const products = await Products.findByIdAndUpdate("6548e724a05dcf17bad3b72a",
+
+  //     {
+  //       $set: {
+  //         sellingPrice: {
+  //           $add: [
+  //             "$sellingPrice",
+  //             {
+  //               $subtract: [9, { $mod: ["$sellingPrice", 10] }]
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     }
+  //   ,
+  //   { new: true }
+  //   ,
+  //   function (err, result) {
+  //     if (err) {
+  //       console.error("Error =====", err);
+  //       res.status(5000).json(err)
+  //     } else {
+  //       res.status(200).json({ message: `${result} products updated successfully.`, result })
+  //       console.log(`${result} products updated successfully.`);
+  //     }
+  //   }
+  // )
+
+
+  // price updated to last didgit 9
+  // const ack = await   // Find documents with a price field
+  //   Products.find({ sellingPrice: { $exists: true } }, (err, products) => {
+  //     if (err) {
+  //       console.error('Error finding products:', err);
+  //     } else {
+  //       // Update the last digit of the price field to 9
+  //       products.forEach(product => {
+  //         const currentPrice = product.sellingPrice;
+  //         if (typeof currentPrice === 'number') {
+  //           const updatedPrice = parseInt(currentPrice.toString().slice(0, -1) + '9');
+
+  //           // Update the document with the new price
+  //           Products.findByIdAndUpdate(
+  //             product._id,
+  //             { $set: { sellingPrice: updatedPrice } },
+  //             { new: true },
+  //             (updateErr, updatedProduct) => {
+  //               if (updateErr) {
+  //                 console.error('Error updating product:', updateErr);
+  //               } else {
+  //                 console.log('Updated product:', updatedProduct);
+  //               }
+  //             }
+  //           );
+  //         }
+  //       });
+  //       console.log(products)
+  //     }
+  //   });
+  // // console.log(ack)
+
+
+
+
+  // find query
+  const ack = await Products.find({}, { brand: 1, title: 1, status: 1, id: 0 })
+  res.send(ack)
 }
+
 
 
 module.exports = {

@@ -67,8 +67,8 @@ const upload = multer({
 });
 
 
-router.post("/add-new-product", authMiddleware, addNewProduct);
-router.put("/product_color_images/:productId", authMiddleware, upload.array('images', 4), productColorImages);
+router.post("/add-new-product", addNewProduct);
+router.put("/product_color_images/:productId", authMiddleware, upload.array('images', 20), productColorImages);
 
 router.get("/get-all-products", getAllProduct);
 

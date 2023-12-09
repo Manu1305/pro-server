@@ -30,9 +30,15 @@ const products = new mongoose.Schema(
     realPrice: {
       type: Number,
       required: true,
+      default:0
     },
     sellingPrice: {
       type: Number,
+      default:0
+    },
+    prices : {
+      type:Array,
+      default:[]
     },
     productDetails: {
       type: [productDetail],
@@ -95,7 +101,7 @@ const products = new mongoose.Schema(
         type: String,
         required: true,
       },
-      
+
     },
     longitude: {
       type: Number,
@@ -111,7 +117,7 @@ const products = new mongoose.Schema(
     },
     stock: {
       type: Number,
-      // required: true,
+      required: true,
       default: 0,
     },
     numOfReviews: {
