@@ -355,7 +355,7 @@ otp = parseInt(otp);
 
 const sendOTP = async (data, res) => {
 
-  console.log(data.body + "this is req.body")
+  console.log(data.body.phone + "this is req.body")
   const phone = data.body.phone;
   const usertype = await data.body.userType;
   req.query({
@@ -374,10 +374,13 @@ const sendOTP = async (data, res) => {
 
 
   req.end(function (res) {
-    if (res.error) throw new Error(res.error);
+    if (res.error) {
+      console.log("Any Error", res)
+      return res.status(500).json(res.error)
+    };
 
-    console.log(res.body);
   });
+  res.send({ message: "Otp sent succefully" })
 
 }
 
