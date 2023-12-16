@@ -463,6 +463,18 @@ async function sendToken(user, statusCode, res) {
   });
 }
 
+
+const isOwnStoreStatus = async (req, res) => {
+  try {
+    const ack = await Users.findByIdAndUpdate(req.params.id,
+      [{$set:{isOwnStore:{$eq:[false,"$isOwnStore"]}}}],
+      {new:true}
+    );
+    res.send(ack)
+  } catch (error) {
+    console.log(error)
+  }
+}
 module.exports = {
   loginApi,
   signUpApi,
@@ -475,6 +487,7 @@ module.exports = {
   verifyOtp,
   userDeactivate,
   userActivate,
-  getSingleUser
+  getSingleUser,
+  isOwnStoreStatus
 
 };

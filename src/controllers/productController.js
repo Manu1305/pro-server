@@ -1,5 +1,6 @@
 const Notification = require("../models/Notifications");
 const Products = require("../models/productModel");
+const User = require("../models/userModel");
 const ErrorResponse = require("../utilis/errorResponse");
 const Adminfee = require("../models/Adminfee");
 const AWS = require("@aws-sdk/client-s3")
@@ -101,15 +102,15 @@ const productColorImages = async (req, res) => {
 
     });
 
-   if(prices){
-    product.prices =JSON.parse( prices)
-   }
-      // adding stocks
-      (product.stock =
-        product.stock +
-        quantites.reduce(function (a, b) {
-          return a + b;
-        }, 0));
+    if (prices) {
+      product.prices = JSON.parse(prices)
+    }
+    // adding stocks
+    (product.stock =
+      product.stock +
+      quantites.reduce(function (a, b) {
+        return a + b;
+      }, 0));
 
     const ack = await product.save();
 
@@ -433,7 +434,19 @@ const runQyeries = async (req, res) => {
 
 
   // find query
-  const ack = await Products.find({}, { brand: 1, title: 1, status: 1, id: 0 })
+  // const ack = await Products.find({}, { brand: 1, title: 1, status: 1, id: 0 })
+  // res.send(ack)
+
+
+
+ const ack =  await  User.updateMany({}, { $set: { isOwnStore: false } }, (err, result) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(`${result.nModified} users updated successfully`);
+    }
+
+  });
   res.send(ack)
 }
 

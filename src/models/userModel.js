@@ -89,7 +89,6 @@ const UserSchema = new mongoose.Schema(
       
    
     },
-
     storeSetup: {
       type: Boolean,
       require: false,
@@ -115,6 +114,10 @@ const UserSchema = new mongoose.Schema(
       },
     
     },
+    isOwnStore: {
+      type:Boolean,
+      default:false
+    }
   },
   { timestamps: true }
 );

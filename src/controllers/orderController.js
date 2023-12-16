@@ -69,7 +69,7 @@ const createOrder = async (req, res) => {
         },
         trackId: null,
         paymentDetails: {
-          
+
         },
 
         pType: "",
@@ -113,7 +113,7 @@ const createOrder = async (req, res) => {
       // console.log("updateColorQua", updateColorQua)
       updateOreders.productDetails[index] = updateColorQua;
       const quantites = Object.values(sizeAndQua);
-      updateOreders.stock  = updateOreders.stock - quantites.reduce(function (a, b) { return a + b; }, 0);
+      updateOreders.stock = updateOreders.stock - quantites.reduce(function (a, b) { return a + b; }, 0);
       await updateOreders.save()
     });
 
@@ -123,7 +123,7 @@ const createOrder = async (req, res) => {
 
     const orders = await Order.find({ orderStatus: "Pending" });
 
-    const ids = orders.map((order) => order._id);
+    const ids = orders.filter((order) => order._id);
 
     res.status(200).json({ message: "Order placed", ids, placedOrder: allplacedOreders });
 

@@ -161,6 +161,17 @@ const refundCheckout = async (req, res) => {
 // refund verification
 const refundVerification = async () => { };
 
+
+// cash on delivery
+
+const cashOnDelivery = async () => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
+
 module.exports = {
   checkout,
   paymentVerification,

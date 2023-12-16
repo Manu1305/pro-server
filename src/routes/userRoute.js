@@ -21,6 +21,7 @@ const {
   sendOTP,
   verifyOtp,
   allUsers,
+  isOwnStoreStatus,
   userDeactivate,
   userActivate,
   
@@ -55,6 +56,7 @@ router.post("/send-otp", sendOTP);
 router.post("/verify-otp", verifyOtp);
  
 router.patch("/deactivate-activate-user/:id", userDeactivate);
+router.put("/change-isownstore-status/:id", isOwnStoreStatus);
 // router.patch("/activate-user", userActivate);
 
 module.exports = router;
