@@ -21,7 +21,49 @@ const s3 = new AWS.S3({
 
 const getAllProduct = async (req, res) => {
   try {
-    const allproduct = await Products.find().sort({ _id: -1 });
+    // const allproduct = await Products.find().sort({ _id: -1 });
+    const allproduct = await Products.aggregate([
+      {
+        $match: {
+          "productDetails": { $elemMatch: { "images.0": { $exists: true } } }
+        }
+      },
+      {
+        $project: {
+          sellingPrice: 1,
+          title: 1,
+          image: { $arrayElemAt: ["$productDetails.images", 0] }
+        }
+      },
+      {
+        $sort: {
+          _id: -1 // Sort by the _id field in descending order to get new items first
+        }
+      }
+    ])
+
+
+
+    // const allproduct = await Products.aggregate([
+    //   {
+    //     $match: {
+    //       "productDetails": { $elemMatch: { "images.0": { $exists: true } } }
+    //     }
+    //   },
+    //   {
+    //     $unwind: "$productDetails"
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 1,
+    //       sellingPrice: 1,
+    //       title: 1,
+    //       image: { $arrayElemAt: ["$productDetails.images", 0] }
+    //     }
+    //   }
+    // ])
+    
+    ;
     res.status(200).json(allproduct);
   } catch (error) {
     res.json({ message: error });
