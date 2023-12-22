@@ -32,6 +32,8 @@ const getAllProduct = async (req, res) => {
         $project: {
           sellingPrice: 1,
           title: 1,
+          selectedCategory:1,
+          status:1,
           image: { $arrayElemAt: ["$productDetails.images", 0] }
         }
       },
