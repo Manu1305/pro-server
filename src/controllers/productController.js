@@ -33,13 +33,15 @@ const getAllProduct = async (req, res) => {
           sellingPrice: 1,
           title: 1,
           selectedCategory:1,
+          selectedSubcategory:1,
           status:1,
+          tags:1,
           image: { $arrayElemAt: ["$productDetails.images", 0] }
         }
       },
       {
         $sort: {
-          _id: -1 // Sort by the _id field in descending order to get new items first
+          _id: -1                          
         }
       }
     ])
