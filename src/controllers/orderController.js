@@ -1,3 +1,4 @@
+const Cart = require("../models/Cart");
 const Order = require("../models/Order");
 const Product = require("../models/productModel");
 const users = require("../models/userModel");
@@ -17,12 +18,17 @@ const createOrder = async (req, res) => {
       const existingProduct = await Product.findById(productId);
 
 
+      console.log("COLOR +++++", productDetails.color)
+
+
       // target color 
-      const targetColor = productDetails.color
+      const targetColor = typeof (productDetails.color) === "object" ? productDetails.color[0] : productDetails.color
 
       // match color
-      const updateColorQua = existingProduct.productDetails.find((prod) =>
-        prod.color === targetColor
+      const updateColorQua = existingProduct.productDetails.find((prod) => {
+        const color = typeof (prod.color) === 'object' ? prod.color[0] : prod.color;
+        return color === targetColor
+      }
       )
 
       // check quantity
@@ -92,14 +98,15 @@ const createOrder = async (req, res) => {
       // console.log("updateOreders", updateOreders);
 
 
-      const targetColor = productDetails.color
+      const targetColor = typeof (productDetails.color) === "object" ? productDetails.color[0] : productDetails.color
 
 
       let index;
       // match color
       const updateColorQua = updateOreders.productDetails.find((prod, ind) => {
         index = ind
-        return prod.color === targetColor
+        const color = typeof (prod.color) === 'object' ? prod.color[0] : prod.color;
+        return color === targetColor
       }
       );
 
@@ -125,7 +132,12 @@ const createOrder = async (req, res) => {
 
     const ids = orders.filter((order) => order._id);
 
-    res.status(200).json({ message: "Order placed", ids, placedOrder: allplacedOreders });
+    const emptyCart = await Cart.findOneAndDelete({userId});
+
+
+
+    res.status(200).json({ message: "Order placed", ids, placedOrder: allplacedOreders ,emptyCart});
+
 
   } catch (error) {
     console.log(error);
@@ -156,7 +168,6 @@ const updateOrder = async (req, res) => {
 
       // Check if the product exists
       if (!updateProduct) {
-        // Handle the case where the product is not found
         console.log(`Product with ID ${productId} not found`);
         continue;
       }
