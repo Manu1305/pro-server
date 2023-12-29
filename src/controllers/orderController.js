@@ -18,9 +18,6 @@ const createOrder = async (req, res) => {
       const existingProduct = await Product.findById(productId);
 
 
-      console.log("COLOR +++++", productDetails.color)
-
-
       // target color 
       const targetColor = typeof (productDetails.color) === "object" ? productDetails.color[0] : productDetails.color
 
@@ -36,7 +33,6 @@ const createOrder = async (req, res) => {
         return updateColorQua.qtyAndSizes[size] && updateColorQua.qtyAndSizes[size] >= sizeAndQua[size];
       });
 
-      console.log("isQuantityAvailable", isQuantityAvailable);
 
       if (!isQuantityAvailable) {
         return res.status(401).json({ message: `Quantity is not available for the ${productDetails.brand}` })
@@ -65,7 +61,7 @@ const createOrder = async (req, res) => {
         quantity: element.totalQuantity,
         raz_paymentId: "",
         raz_orderId: "",
-        orderStatus: "Pending",
+        orderStatus: req.user.isOwnStore ? "Placed" : "Pending",
         pkgDeta: {},
         dlvAddr: address,
         pickAdd: {
@@ -74,9 +70,7 @@ const createOrder = async (req, res) => {
           name: sellerAdd[0].name,
         },
         trackId: null,
-        paymentDetails: {
-
-        },
+        paymentDetails: "",
 
         pType: "",
 
@@ -130,13 +124,19 @@ const createOrder = async (req, res) => {
 
     const orders = await Order.find({ orderStatus: "Pending" });
 
-    const ids = orders.filter((order) => order._id);
+    // console.log(orders)
+
+    const ids = orders.map((order) => order._id);
+
+
+    console.log("Ids",ids)
+
+
 
     const emptyCart = await Cart.findOneAndDelete({userId});
 
 
-
-    res.status(200).json({ message: "Order placed", ids, placedOrder: allplacedOreders ,emptyCart});
+    res.status(200).json({ message: "Order placed", ids, placedOrder: allplacedOreders,emptyCart });
 
 
   } catch (error) {
@@ -211,10 +211,10 @@ const allOrders = async (req, res) => {
     }
 
 
-    const filterdOrders = orders.filter(ele => ele.orderStatus !== "Pending");
+    // const filterdOrders = orders.filter(ele => ele.orderStatus !== "Pending");
 
 
-    res.status(200).json(filterdOrders);
+    res.status(200).json(orders);
   } catch (error) {
     console.log(error);
   }

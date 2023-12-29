@@ -18,8 +18,8 @@ const instance = new Razorpay({
 // order creation
 const checkout = async (req, res, next) => {
   const options = {
-    amount: Number(req.body.amount) * 100,
-    // amount: 1*100,
+    // amount: Number(req.body.amount) * 100,
+    amount: 1*100,
 
     currency: "INR",
   };
@@ -45,6 +45,7 @@ const paymentVerification = async (req, res, next) => {
   const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
     req.body;
   const pType = req.query.pType
+
   console.log("Params ID", typeof req.params.ids);
   console.log("Params ID", req.params.ids);
 
@@ -60,6 +61,8 @@ const paymentVerification = async (req, res, next) => {
       .createHmac("sha256", process.env.RAZORPAT_API_SECRET_KEY_PROD)
       .update(body.toString())
       .digest("hex");
+
+
 
     const isAuth = expectedSignature === razorpay_signature;
     if (isAuth) {
@@ -79,7 +82,8 @@ const paymentVerification = async (req, res, next) => {
             orderStatus: "Placed",
             raz_paymentId: razorpay_payment_id,
             raz_orderId: razorpay_order_id,
-            pType
+            pType,
+            paymentDetails:pType
 
           },
 
