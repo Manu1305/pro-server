@@ -148,7 +148,6 @@ const createOrder = async (req, res) => {
 
 
 const updateOrder = async (req, res) => {
-  const { products } = req.body;
 
   try {
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -160,8 +159,9 @@ const updateOrder = async (req, res) => {
     );
 
     // Loop through the products in the request body
-    for (const element of products) {
-      const { productId, sizeAndQua } = element;
+      const { productId, sizeAndQua } = updatedOrder;
+
+
 
       // Find the product by its ID
       const updateProduct = await Product.findById(productId);
@@ -169,7 +169,6 @@ const updateOrder = async (req, res) => {
       // Check if the product exists
       if (!updateProduct) {
         console.log(`Product with ID ${productId} not found`);
-        continue;
       }
 
       // Loop through the sizes and quantities in the request
@@ -186,7 +185,7 @@ const updateOrder = async (req, res) => {
 
       // Save the updated product
       await updateProduct.save();
-    }
+    // }
 
     res.status(200).json(updatedOrder); // Corrected response handling
   } catch (error) {
