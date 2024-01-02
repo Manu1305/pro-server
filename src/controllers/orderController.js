@@ -61,7 +61,7 @@ const createOrder = async (req, res) => {
         quantity: element.totalQuantity,
         raz_paymentId: "",
         raz_orderId: "",
-        orderStatus: req.user.isOwnStore ? "Placed" : "Pending",
+        orderStatus: req.user.isOwnStore && req.params.paymentType !== "Online Payment" ?  "Placed" :  "Pending",
         pkgDeta: {},
         dlvAddr: address,
         pickAdd: {

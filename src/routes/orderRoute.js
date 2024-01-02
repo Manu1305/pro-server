@@ -11,7 +11,7 @@ const {
 } = require("../controllers/orderController");
 
 // Create Order
-router.post("/placeOrder", authMiddleware, createOrder);
+router.post("/placeOrder/:paymentType", authMiddleware, createOrder);
 
 // update Order
 router.put("/update-order/:id", updateOrder);
