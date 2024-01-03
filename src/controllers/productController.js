@@ -32,45 +32,45 @@ const getAllProduct = async (req, res) => {
         $project: {
           sellingPrice: 1,
           title: 1,
-          selectedCategory:1,
-          selectedSubcategory:1,
-          status:1,
-          tags:1,
-          seller:1,
-          brand:1,
-          createdAt:1,
+          selectedCategory: 1,
+          selectedSubcategory: 1,
+          status: 1,
+          tags: 1,
+          seller: 1,
+          brand: 1,
+          createdAt: 1,
           image: { $arrayElemAt: ["$productDetails.images", 0] }
         }
       },
       {
         $sort: {
-          _id: -1                          
+          _id: -1
         }
       }
     ])
 
 
 
-    // const allproduct = await Products.aggregate([
-    //   {
-    //     $match: {
-    //       "productDetails": { $elemMatch: { "images.0": { $exists: true } } }
-    //     }
-    //   },
-    //   {
-    //     $unwind: "$productDetails"
-    //   },
-    //   {
-    //     $project: {
-    //       _id: 1,
-    //       sellingPrice: 1,
-    //       title: 1,
-    //       image: { $arrayElemAt: ["$productDetails.images", 0] }
-    //     }
-    //   }
-    // ])
-    
-    ;
+      // const allproduct = await Products.aggregate([
+      //   {
+      //     $match: {
+      //       "productDetails": { $elemMatch: { "images.0": { $exists: true } } }
+      //     }
+      //   },
+      //   {
+      //     $unwind: "$productDetails"
+      //   },
+      //   {
+      //     $project: {
+      //       _id: 1,
+      //       sellingPrice: 1,
+      //       title: 1,
+      //       image: { $arrayElemAt: ["$productDetails.images", 0] }
+      //     }
+      //   }
+      // ])
+
+      ;
     res.status(200).json(allproduct);
   } catch (error) {
     res.json({ message: error });
@@ -488,15 +488,39 @@ const runQyeries = async (req, res) => {
 
 
 
- const ack =  await  User.updateMany({}, { $set: { isOwnStore: false } }, (err, result) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(`${result.nModified} users updated successfully`);
-    }
+  //  const ack =  await  User.updateMany({}, { $set: { isOwnStore: false } }, (err, result) => {
+  //     if (err) {
+  //       console.error(err);
+  //     } else {
+  //       console.log(`${result.nModified} users updated successfully`);
+  //     }
+  //   });
 
-  });
-  res.send(ack)
+  // const products = await Products.find({_id:"656592162e8013efbdaf9a8d"});
+  const products = await Products.find({_id:"65548c94e91621470a429337"});
+  for (const product of products) {
+    // console.log(product)
+
+    // if(product.productDetails.length === 1 )
+    const packOffValue = parseFloat(product.productInfo.Packoff) || 1;
+
+
+    if(packOffValue >1){
+      console.log(" product " ,product.productDetails.length , product.productDetails.length *Object.values(product.productDetails[0].qtyAndSizes).length)
+      const calculatedSellingPrice = product.sellingPrice *  product.productDetails[0].color.length * Object.values(product.productDetails[0].qtyAndSizes).length;
+  
+      // Update the product's sellingPrice in the database
+      product.sellingPrice = calculatedSellingPrice;
+      await product.save();
+
+    }
+  }
+
+  return res.json({ message: "Selling prices updated for all products",ack:products });
+
+
+  // const ack = await Products.updateOne({ _id: "657d6427ad3b136d0941ce03" }, { $set: { sellingPrice } })
+  // res.send(ack)
 }
 
 
