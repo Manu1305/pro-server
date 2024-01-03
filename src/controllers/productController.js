@@ -36,6 +36,9 @@ const getAllProduct = async (req, res) => {
           selectedSubcategory:1,
           status:1,
           tags:1,
+          seller:1,
+          brand:1,
+          createdAt:1,
           image: { $arrayElemAt: ["$productDetails.images", 0] }
         }
       },
