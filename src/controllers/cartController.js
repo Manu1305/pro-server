@@ -15,7 +15,7 @@ const addToCart = async (req, res) => {
 
     // Calculate the total cart price
     const itemPrice = Number(product.sellingPrice * totalItems) ;
-
+console.log(itemPrice,'itemPrice')
     // Find the cart for the given userId
     let cart = await Cart.findOne({ userId });
 

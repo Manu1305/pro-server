@@ -10,6 +10,7 @@ dotenv.config({ path: "../config/.env" })
 const bcrypt = require("bcrypt");
 var unirest = require("unirest");
 const Products = require("../models/productModel");
+const moment = require('moment');
 
 var req = unirest("GET", "https://www.fast2sms.com/dev/bulkV2");
 
@@ -61,6 +62,17 @@ const loginApi = async (req, res) => {
 
 const signUpApi = async (req, res) => {
   const { userData } = req.body;
+
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "hitecmart303@gmail.com",
+      pass: "kvlflizslfiuxzse",
+    },
+  });
+
 
   const user = await Users.findOne({ email: userData.email });
   const phone = await Users.findOne({ phone: userData.phone });
@@ -117,8 +129,36 @@ const signUpApi = async (req, res) => {
 
       const saveSub = subscription.save();
 
+      var mailOptions = {
+        from: "hitecmart303@gmail.com",
+        to: ["manu@certontech.com", "support@hitecmart.com", ",akshay@certontech.com"],
+        subject: "New seller signup",
+        html: `
+      <img style="width:100px;height:40px;object-fit:contain" src="data:image/jpeg;base64,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" alt="Hitecmart">
+        <h2>new Seller created new account name is  ${name} ,phone is ${phone} </h2>
+      `,
+      };
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+
+          return res.status(200).json({ success: true, message: info.response });
+        }
+      });
+
+
       return res.status(200).json({ register: ack, subscription: saveSub });
-    } else {
+    }
+
+
+
+
+
+
+
+    else {
       const { name, email, phone, password, gst, urType } = userData;
       const salt = await bcrypt.genSaltSync(10);
       const hashedpassword = bcrypt.hashSync(password, salt);
@@ -271,7 +311,7 @@ const forgetpassword = async (req, res) => {
     const link = `https://hitecmart.com/forgotpassword/${existingUser.id}/${token}`;
     console.log(link);
 
-    // send mail using optional parameters
+
     var mailOptions = {
       from: "manukrishnan858@gmail.com",
       to: email,
@@ -467,14 +507,42 @@ async function sendToken(user, statusCode, res) {
 const isOwnStoreStatus = async (req, res) => {
   try {
     const ack = await Users.findByIdAndUpdate(req.params.id,
-      [{$set:{isOwnStore:{$eq:[false,"$isOwnStore"]}}}],
-      {new:true}
+      [{ $set: { isOwnStore: { $eq: [false, "$isOwnStore"] } } }],
+      { new: true }
     );
     res.send(ack)
   } catch (error) {
     console.log(error)
   }
 }
+
+const onlineStatus = async (req, res) => {
+  try {
+
+    const userId = req.params.id
+
+    const currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+    const checkuser = await Users.findById(userId)
+    if (checkuser) {
+      const statusChange = await Users.findByIdAndUpdate(userId, { $set: { online: currentDate } }, { new: true })
+      res.status(200).json({ message: 'last seen updated', statusChange });
+
+    }
+    else {
+      console.log('no user')
+      res.status(401).json('no user found error')
+    }
+
+  } catch (error) {
+    console.log(error, 'catch error')
+  }
+}
+
+
+
+
+
+
 module.exports = {
   loginApi,
   signUpApi,
@@ -488,6 +556,7 @@ module.exports = {
   userDeactivate,
   userActivate,
   getSingleUser,
-  isOwnStoreStatus
+  isOwnStoreStatus,
+  onlineStatus
 
 };

@@ -32,13 +32,14 @@ const getAllProduct = async (req, res) => {
         $project: {
           sellingPrice: 1,
           title: 1,
-          selectedCategory: 1,
-          selectedSubcategory: 1,
-          status: 1,
-          tags: 1,
-          seller: 1,
-          brand: 1,
-          createdAt: 1,
+          selectedCategory:1,
+          selectedSubcategory:1,
+          status:1,
+          tags:1,
+          brand:1,
+          seller:1,
+          createdAt:1,
+          stock:1,
           image: { $arrayElemAt: ["$productDetails.images", 0] }
         }
       },
@@ -48,10 +49,7 @@ const getAllProduct = async (req, res) => {
         }
       }
     ])
-
-
-
-      // const allproduct = await Products.aggregate([
+    // const allproduct = await Products.aggregate([
       //   {
       //     $match: {
       //       "productDetails": { $elemMatch: { "images.0": { $exists: true } } }
@@ -177,11 +175,11 @@ const requestedProducts = async (req, res) => {
 
 
     if (type === "admin") {
-      requestedProducts = await Products.find({ status: "Pending" });
+      requestedProducts = await Products.find({ status: "Pending" }).sort({createdAt:-1});
     }
     if (type === "seller") {
       requestedProducts = await Products.find({ seller: seller });
-      requestedProducts.filter((prodcut) => prodcut.status === "Pending");
+      requestedProducts.filter((prodcut) => prodcut.status === "Pending").sort({createdAt:-1});
     }
 
     if (requestedProducts) {
