@@ -59,9 +59,6 @@ app.use("/subscription", subsRouter);
 app.use("/noti", notifRouter);
 
 
-
-
-
 const server = app.listen(PORT, () => {
   // db connection
   connectDB();

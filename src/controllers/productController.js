@@ -134,9 +134,6 @@ const productColorImages = async (req, res) => {
 
     const prices = req.body.prices
 
-    console.log("USer", req.user);
-
-    console.log("color", prices)
 
     const product = await Products.findById(req.params.productId);
 
