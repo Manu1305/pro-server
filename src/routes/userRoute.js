@@ -24,6 +24,7 @@ const {
   isOwnStoreStatus,
   userDeactivate,
   userActivate,
+  onlineStatus
   
 } = require("../controllers/userController");
 
@@ -57,6 +58,6 @@ router.post("/verify-otp", verifyOtp);
  
 router.patch("/deactivate-activate-user/:id", userDeactivate);
 router.put("/change-isownstore-status/:id", isOwnStoreStatus);
-// router.patch("/activate-user", userActivate);
-
+router.post("/onlinestatus/:id", onlineStatus);
+router.patch("/activate-user", userActivate);
 module.exports = router;

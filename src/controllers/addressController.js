@@ -7,9 +7,6 @@ const addAddress = async (req, res) => {
   const address = new Address({ userId: req.user.id, ...req.body });
 
   try {
-    // const findUser = await Address.find({ userId: req.user.id });
-    // console.log(findUser);
-
     const saveAddress = await address.save();
 
     res.status(200).json(saveAddress);

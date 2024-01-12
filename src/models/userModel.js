@@ -86,6 +86,7 @@ const UserSchema = new mongoose.Schema(
         type: String,
         require: true,
       },
+    
       
    
     },
@@ -117,6 +118,10 @@ const UserSchema = new mongoose.Schema(
     isOwnStore: {
       type:Boolean,
       default:false
+    }, online: {
+      type: Date,
+      require: false,
+      default: null
     }
   },
   { timestamps: true }
