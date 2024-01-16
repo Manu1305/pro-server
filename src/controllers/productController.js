@@ -121,8 +121,59 @@ const addNewProduct = async (req, res) => {
     res.status(500).send({ code: errorCode, errorMessage });
   }
 };
-// ----------------Admin access-------------------
-// Requested products from seller and Admin
+
+const addProductSizeANdQuantity = async () => {
+try {
+  const {color,qtyAndSizes} = req.body;
+
+  const product = await Products.findByIdAndUpdate(req.params.productId,{productDetails:{color,qtyAndSizes,}});
+  
+} catch (error) {
+  console.log(error);
+  return next(new ErrorResponse(error, 401));
+}
+}
+
+
+const multiColorProduct = async () => {
+  try {
+    const qtyAndSizes = JSON.parse(req.body.qtyAndSizes);
+    const color = req.body.color;
+    const images = req.files.map((ele) => ele.location);
+
+    const prices = req.body.prices
+
+
+    const product = await Products.findById(req.params.productId);
+
+    const quantites = Object.values(qtyAndSizes);
+
+    const checkColors = color.split(',')
+
+    product.productDetails.push({
+      qtyAndSizes,
+      color: checkColors.length > 1 ? checkColors : req.body.color,
+      images,
+
+    });
+
+    if (prices) {
+      product.prices = JSON.parse(prices)
+    }
+    // adding stocks
+    (product.stock =
+      product.stock +
+      quantites.reduce(function (a, b) {
+        return a + b;
+      }, 0));
+
+    const ack = await product.save();
+
+    res.status(200).json({ success: true, message: ack, });
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const productColorImages = async (req, res) => {
   try {
@@ -523,6 +574,8 @@ const runQyeries = async (req, res) => {
 module.exports = {
   getAllProduct,
   addNewProduct,
+  addProductSizeANdQuantity,
+  multiColorProduct,
   requestedProducts,
   allowRequestedProducts,
   removeRequestedProducts,

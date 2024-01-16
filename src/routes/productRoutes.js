@@ -18,6 +18,8 @@ const {
   requestedProducts,
   allowRequestedProducts,
   addNewProduct,
+  addProductSizeANdQuantity,
+  multiColorProduct,
   removeRequestedProducts,
   updateProduct,
   getOneProduct,
@@ -67,8 +69,12 @@ const upload = multer({
 });
 
 
-router.post("/add-new-product",authMiddleware, addNewProduct);
-router.put("/product_color_images/:productId", authMiddleware, upload.array('images', 20), productColorImages);
+router.post("/add-product-details",authMiddleware, addNewProduct);
+router.post("/add-product-size-and-quantity",authMiddleware, addProductSizeANdQuantity);
+
+router.post("/product_color_images/:productId", authMiddleware, upload.array('images', 20), productColorImages);
+
+router.post('/upload-multicolor-product',authMiddleware, upload.array('images', 20),multiColorProduct)
 
 router.get("/get-all-products", getAllProduct);
 
