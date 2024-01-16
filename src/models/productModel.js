@@ -14,6 +14,15 @@ const productDetail = new mongoose.Schema({
     type: Array,
     require: true,
   },
+  minQuantity : {
+    type:Number,
+    required:true,
+    default:1
+  },
+  kidsPrices : {
+    type:Object,
+    required:true,
+  }
 });
 
 const products = new mongoose.Schema(
