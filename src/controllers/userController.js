@@ -62,7 +62,7 @@ const loginApi = async (req, res) => {
 
 const signUpApi = async (req, res) => {
   const { userData } = req.body;
-
+console.log(userData,'userDatas')
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -131,11 +131,11 @@ const signUpApi = async (req, res) => {
 
       var mailOptions = {
         from: "hitecmart303@gmail.com",
-        to: ["manu@certontech.com", "support@hitecmart.com", ",kartik@certontech.com"],
-        subject: "New seller signup",
+        to: ["manu@certontech.com", "support@hitecmart.com", "kartik@certontech.com","akshay@certontech.com","amarjeet@certontech.com"],
+        subject: "New seller joined our team",
         html: `
       <img style="width:100px;height:40px;object-fit:contain" src="https://www.walkinmyshoes.ie/media/4388/happiness.png" alt="Hitecmart">
-        <h2>new Seller joined our team  ${name} ,phone is ${phone}, shopName:${shopName}, GST:${gst}, address :${address} </h2>
+        <h2>new Seller joined our team  name:${name} ,phone is ${phone} </h2>
       `,
       };
       transporter.sendMail(mailOptions, function (error, info) {
