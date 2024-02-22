@@ -83,7 +83,7 @@ const subscription = async (req, res) => {
 
     res.status(200).json({ razAck, userAck });
   } catch (error) {
-    console.log("EROOR",error);
+    console.log("EROOR", error);
 
     const errorCode = error.code;
     const errorMessage = error.message;
